@@ -1,17 +1,18 @@
+import { UseCaseFactory } from "../UseCaseFactory"
+import TitlePage from "../components/TitlePage"
+
 export default function Dashboard() {
-    return (
-        <div className="grid grid-cols-6 relative">
-            <div className="col-span-5 w-full p-8">
-                <h1 className="text-left text-4xl font-bold text-sky-700">
-                    Dashboard
-                </h1>
-                <div className="grid gap-4">
-                    <div className="bg-sky-100 h-64 rounded-2xl mt-12"></div>
-                    <div className="bg-sky-100 h-64 rounded-2xl"></div>
-                    <div className="bg-sky-100 h-64 rounded-2xl"></div>
-                    <div className="bg-sky-100 h-64 rounded-2xl"></div>
-                </div>
+    const useCaseFactory = new UseCaseFactory()
+    const currentSession = useCaseFactory.current().get()
+
+    return <>
+        <TitlePage>Dashboard</TitlePage>
+        <div className="grid gap-4">
+            <div className="bg-sky-100 h-40 w-1/2 rounded-2xl">
+                <p>Name : {currentSession.name}</p>
+                <p>Username : {currentSession.username}</p>
+                <p>Role : {currentSession.role}</p>
             </div>
         </div>
-    )
+    </>
 }

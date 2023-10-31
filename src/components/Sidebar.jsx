@@ -12,7 +12,7 @@ export default function Sidebar() {
         <div className="flex flex-col justify-between text-left bg-sky-700 h-screen fixed w-full top-0 bottom-0 left-0 col-span-1 text-white pt-6">
             <div>
                 <div className="mt-2 mb-6 pl-6">
-                    <h1 className="text-3xl font-bold">eSCM</h1>
+                    <h1 className="text-3xl font-bold">eSCM PT Rajawali</h1>
                 </div>
                 <ul>
                     <ItemLink path="/" name="Dashboard" />
