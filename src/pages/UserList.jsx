@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
-import TitlePage from "../components/TitlePage"
 import Modal from "../components/Modal"
+import TitlePage from "../components/TitlePage"
 
 export default function UserList() {
     const useCaseFactory = new UseCaseFactory()
     const [userList, setUserList] = useState([])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+    const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
     const [createUserReq, setCreateUserReq] = useState({
+        name: "",
+        username: "",
+        role: ""
+    })
+    const [updateUserReq, setUpdateUserReq] = useState({
         name: "",
         username: "",
         role: ""
@@ -36,6 +42,24 @@ export default function UserList() {
                         console.log(response.error_schema.error_message)
                         setIsModalAddOpen(false)
                         setCreateUserReq({
+                            name: "",
+                            username: "",
+                            role: ""
+                        })
+                        getUserList()
+                    }
+                }
+            })
+    }
+
+    const handleOnSubmitUpdateUser = () => {
+        useCaseFactory.updateUser().execute(updateUserReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        console.log(response.error_schema.error_message)
+                        setIsModalUpdateOpen(false)
+                        setUpdateUserReq({
                             name: "",
                             username: "",
                             role: ""
@@ -101,11 +125,43 @@ export default function UserList() {
                         <td className="border border-black py-1 px-10">{data.username}</td>
                         <td className="border border-black py-1 px-10">{data.role}</td>
                         <td className="border border-black py-1 px-10">
-                            <p><span>Edit</span> | <span>Hapus</span></p>
+                            <p><span onClick={() => {
+                                setUpdateUserReq({
+                                    name: data.name,
+                                    username: data.username,
+                                    role: data.role
+                                })
+                                setIsModalUpdateOpen(true)
+                            }}>Edit</span> | <span>Hapus</span></p>
                         </td>
                     </tr>
                 })}
             </tbody>
         </table>
+        <Modal isOpen={isModalUpdateOpen} onClose={() => setIsModalUpdateOpen(false)}>
+            <input
+                type="text"
+                placeholder="Name"
+                value={updateUserReq.name}
+                onChange={(e) => setUpdateUserReq({
+                    ...updateUserReq,
+                    name: e.target.value
+                })}
+            />
+            <select
+                value={updateUserReq.role}
+                onChange={(e) => setUpdateUserReq({
+                    ...updateUserReq,
+                    role: e.target.value
+                })}
+            >
+                <option value="">Role</option>
+                <option value="pengadaan">Pengadaan</option>
+                <option value="gudang">Gudang</option>
+                <option value="produksi">Produksi</option>
+                <option value="distribusi">Distribusi</option>
+            </select>
+            <button onClick={handleOnSubmitUpdateUser}>Update</button>
+        </Modal>
     </>
 }
