@@ -30,9 +30,16 @@ export class LoginUseCase {
     }
 }
 
+export class GetUserListUseCase {
+    execute() {
+        return new UserService().getList()
+    }
+}
+
 export class UseCaseFactory {
     // Session Use Case
     current() { return new SessionUseCase() }
     // User Use Case
-    userLogin() { return new LoginUseCase() }
+    login() { return new LoginUseCase() }
+    getUserList() { return new GetUserListUseCase() }
 }
