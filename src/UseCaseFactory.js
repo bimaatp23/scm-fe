@@ -48,6 +48,12 @@ export class UpdateUserUseCase {
     }
 }
 
+export class DeleteUserUseCase {
+    execute(deleteUserReq) {
+        return new UserService().deleteUser(deleteUserReq)
+    }
+}
+
 export class UseCaseFactory {
     // Session Use Case
     current() { return new SessionUseCase() }
@@ -56,4 +62,5 @@ export class UseCaseFactory {
     getUserList() { return new GetUserListUseCase() }
     createUser() { return new CreateUserUseCase() }
     updateUser() { return new UpdateUserUseCase() }
+    deleteUser() { return new DeleteUserUseCase() }
 }
