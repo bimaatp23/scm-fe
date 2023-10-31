@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import ClientWrapper from "./components/ClientWrapper"
 import { UseCaseFactory } from "./UseCaseFactory"
 
 export function Middleware(props) {
@@ -12,7 +13,7 @@ export function Middleware(props) {
         } else {
             if (currentSession.name != null) window.location.assign("/")
         }
-    }, ["static"])
+    })
 
-    return children
+    return isLogin ? <ClientWrapper>{children}</ClientWrapper> : children
 }

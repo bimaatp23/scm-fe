@@ -1,9 +1,6 @@
-import Sidebar from "../components/Sidebar.jsx"
-
-const Dashboard = () => {
-    return(
+export default function Dashboard() {
+    return (
         <div className="grid grid-cols-6 relative">
-            <Sidebar/>
             <div className="col-span-5 w-full p-8">
                 <h1 className="text-left text-4xl font-bold text-sky-700">
                     Dashboard
@@ -18,5 +15,3 @@ const Dashboard = () => {
         </div>
     )
 }
-
-export default Dashboard

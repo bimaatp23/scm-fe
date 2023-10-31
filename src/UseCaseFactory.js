@@ -5,18 +5,20 @@ import { UserService } from "./services/UserService"
 export class SessionUseCase {
     get() {
         return {
-            name: localStorage.getItem('name'),
-            username: localStorage.getItem('username'),
-            role: localStorage.getItem('role')
+            name: localStorage.getItem("name"),
+            username: localStorage.getItem("username"),
+            role: localStorage.getItem("role")
         }
     }
     set(payload) {
-        localStorage.setItem('name', payload.name)
-        localStorage.setItem('username', payload.username)
-        localStorage.setItem('role', payload.role)
+        localStorage.setItem("name", payload.name)
+        localStorage.setItem("username", payload.username)
+        localStorage.setItem("role", payload.role)
     }
-    delete() {
-        localStorage.clear()
+    clear() {
+        localStorage.removeItem("name")
+        localStorage.removeItem("username")
+        localStorage.removeItem("role")
     }
 }
 

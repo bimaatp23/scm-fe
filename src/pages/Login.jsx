@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 
-function Login() {
+export default function Login() {
   const useCaseFactory = new UseCaseFactory()
   const [loginReq, setLoginReq] = useState({
     username: "",
@@ -26,6 +26,9 @@ function Login() {
     e.preventDefault()
     useCaseFactory.userLogin().execute(loginReq)
       .subscribe({
+        next: (response) => {
+          window.location.assign("/")
+        },
         error: (error) => {
           console.log(error)
         }
@@ -74,5 +77,3 @@ function Login() {
     </div>
   )
 }
-
-export default Login
