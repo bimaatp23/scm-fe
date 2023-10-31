@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import ClientWrapper from "./components/ClientWrapper"
 import { UseCaseFactory } from "./UseCaseFactory"
+import ClientWrapper from "./components/ClientWrapper"
 
 export function Middleware(props) {
     const { isLogin, children } = props
@@ -13,7 +13,7 @@ export function Middleware(props) {
         } else {
             if (currentSession.name != null) window.location.assign("/")
         }
-    })
+    }, ["static"])
 
     return isLogin ? <ClientWrapper>{children}</ClientWrapper> : children
 }

@@ -24,13 +24,12 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    useCaseFactory.userLogin().execute(loginReq)
+    useCaseFactory.login().execute(loginReq)
       .subscribe({
         next: (response) => {
-          window.location.assign("/")
-        },
-        error: (error) => {
-          console.log(error)
+          if (response.error_schema.error_code === 200) {
+            window.location.assign("/")
+          }
         }
       })
   }

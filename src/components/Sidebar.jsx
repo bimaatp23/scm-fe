@@ -2,6 +2,7 @@ import { UseCaseFactory } from "../UseCaseFactory"
 
 export default function Sidebar() {
     const useCaseFactory = new UseCaseFactory()
+    const currentSession = useCaseFactory.current().get()
 
     const onLogout = () => {
         useCaseFactory.current().clear()
@@ -16,11 +17,12 @@ export default function Sidebar() {
                 </div>
                 <ul>
                     <ItemLink path="/" name="Dashboard" />
-                    <ItemLink path="#" name="Menu 1" />
-                    <ItemLink path="#" name="Menu 2" />
-                    <ItemLink path="#" name="Menu 3" />
-                    <ItemLink path="#" name="Menu 4" />
-                    <ItemLink path="#" name="Menu 5" />
+                    {currentSession.role === 'admin' ?
+                        <>
+                            <ItemLink path="/user-list" name="User List" />
+                        </>
+                        : <></>
+                    }
                 </ul>
             </div>
             <div>
@@ -36,11 +38,11 @@ export default function Sidebar() {
 function ItemLink(props) {
     const { path, name } = props
 
-    return <li onClick={() => window.location.assign(path)} className="text-xl font-semibold hover:bg-sky-900 pl-6 py-2">{name}</li>
+    return <li onClick={() => window.location.assign(path)} className="text-xl font-semibold hover:bg-sky-900 pl-6 py-2 cursor-pointer">{name}</li>
 }
 
 function ItemFunction(props) {
     const { onClick, name } = props
 
-    return <li onClick={onClick} className="text-xl font-semibold hover:bg-sky-900 pl-6 py-2">{name}</li>
+    return <li onClick={onClick} className="text-xl font-semibold hover:bg-sky-900 pl-6 py-2 cursor-pointer">{name}</li>
 }
