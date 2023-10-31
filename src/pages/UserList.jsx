@@ -8,6 +8,7 @@ export default function UserList() {
     const [userList, setUserList] = useState([])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
+    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
     const [createUserReq, setCreateUserReq] = useState({
         name: "",
         username: "",
@@ -17,6 +18,9 @@ export default function UserList() {
         name: "",
         username: "",
         role: ""
+    })
+    const [deleteUserReq, setDeleteUserReq] = useState({
+        username: ""
     })
 
     useEffect(() => {
@@ -63,6 +67,22 @@ export default function UserList() {
                             name: "",
                             username: "",
                             role: ""
+                        })
+                        getUserList()
+                    }
+                }
+            })
+    }
+
+    const handleOnSubmitDeleteUser = () => {
+        useCaseFactory.deleteUser().execute(deleteUserReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        console.log(response.error_schema.error_message)
+                        setIsModalDeleteOpen(false)
+                        setDeleteUserReq({
+                            username: ""
                         })
                         getUserList()
                     }
@@ -132,7 +152,12 @@ export default function UserList() {
                                     role: data.role
                                 })
                                 setIsModalUpdateOpen(true)
-                            }}>Edit</span> | <span>Hapus</span></p>
+                            }}>Edit</span> | <span onClick={() => {
+                                setDeleteUserReq({
+                                    username: data.username
+                                })
+                                setIsModalDeleteOpen(true)
+                            }}>Hapus</span></p>
                         </td>
                     </tr>
                 })}
@@ -162,6 +187,10 @@ export default function UserList() {
                 <option value="distribusi">Distribusi</option>
             </select>
             <button onClick={handleOnSubmitUpdateUser}>Update</button>
+        </Modal>
+        <Modal isOpen={isModalDeleteOpen} onClose={() => setIsModalDeleteOpen(false)}>
+            <p>Yakin hapus user ({deleteUserReq.username}) ?</p>
+            <button onClick={handleOnSubmitDeleteUser}>Delete</button>
         </Modal>
     </>
 }
