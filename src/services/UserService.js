@@ -2,15 +2,16 @@ import axios from "axios"
 import { from, map, of } from "rxjs"
 import { catchError } from "rxjs/operators"
 import { SessionUseCase } from "../UseCaseFactory"
-import { jwtConfig, noJwtConfig } from "./BaseConfig"
+import { BaseConfig } from "./BaseConfig"
 
 export class UserService {
+    baseConfig = new BaseConfig()
     sessionUseCase = new SessionUseCase()
 
     endpoint = process.env.REACT_APP_ENDPOINT + "/user"
 
     login(loginReq) {
-        return from(axios.post(this.endpoint + "/login", loginReq, noJwtConfig))
+        return from(axios.post(this.endpoint + "/login", loginReq, this.baseConfig.noJwtConfig))
             .pipe(
                 map((response) => {
                     this.sessionUseCase.set(response.data.output_schema)
@@ -24,7 +25,7 @@ export class UserService {
     }
 
     getList() {
-        return from(axios.get(this.endpoint + "/list", jwtConfig))
+        return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data

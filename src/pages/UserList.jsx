@@ -35,7 +35,7 @@ export default function UserList() {
             </thead>
             <tbody>
                 {userList.map((data, index) => {
-                    return <tr>
+                    return <tr key={index}>
                         <td className="border border-black py-1 px-10">{index + 1}</td>
                         <td className="border border-black py-1 px-10">{data.name}</td>
                         <td className="border border-black py-1 px-10">{data.username}</td>

@@ -1,12 +1,19 @@
-export const noJwtConfig = {
-    headers: {
-        "Content-Type": "multipart/form-data"
-    }
-}
+import { SessionUseCase } from "../UseCaseFactory"
+import jsrsasign from "jsrsasign"
 
-export const jwtConfig = {
-    headers: {
-        "Content-Type": "multipart/form-data",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW4iLCJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNjk4MjIyNDIzfQ.2DM3CIhAKHzriKb5S4k-S5wjfjzdKTLG5kLJ_cqRZYo"
+export class BaseConfig {
+    sessionUseCase = new SessionUseCase()
+
+    noJwtConfig = {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    }
+
+    jwtConfig = {
+        headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": "Bearer " + jsrsasign.jws.JWS.sign(null, { alg: 'HS256' }, this.sessionUseCase.get(), process.env.REACT_APP_SECRET_KEY)
+        }
     }
 }
