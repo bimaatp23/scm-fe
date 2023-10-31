@@ -42,6 +42,12 @@ export class CreateUserUseCase {
     }
 }
 
+export class UpdateUserUseCase {
+    execute(updateUserReq) {
+        return new UserService().updateUser(updateUserReq)
+    }
+}
+
 export class UseCaseFactory {
     // Session Use Case
     current() { return new SessionUseCase() }
@@ -49,4 +55,5 @@ export class UseCaseFactory {
     login() { return new LoginUseCase() }
     getUserList() { return new GetUserListUseCase() }
     createUser() { return new CreateUserUseCase() }
+    updateUser() { return new UpdateUserUseCase() }
 }
