@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import TitlePage from "../components/TitlePage"
+import Modal from "../components/Modal"
 
 export default function UserList() {
     const useCaseFactory = new UseCaseFactory()
     const [userList, setUserList] = useState([])
+    const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+    const [createUserReq, setCreateUserReq] = useState({
+        name: "",
+        username: "",
+        role: ""
+    })
 
     useEffect(() => {
         getUserList()
@@ -21,8 +28,61 @@ export default function UserList() {
             })
     }
 
+    const handleOnSubmitAddUser = () => {
+        useCaseFactory.createUser().execute(createUserReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        console.log(response.error_schema.error_message)
+                        setIsModalAddOpen(false)
+                        setCreateUserReq({
+                            name: "",
+                            username: "",
+                            role: ""
+                        })
+                        getUserList()
+                    }
+                }
+            })
+    }
+
     return <>
         <TitlePage>User List</TitlePage>
+        <button onClick={() => setIsModalAddOpen(true)}>Add User</button>
+        <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
+            <input
+                type="text"
+                placeholder="Name"
+                value={createUserReq.name}
+                onChange={(e) => setCreateUserReq({
+                    ...createUserReq,
+                    name: e.target.value
+                })}
+            />
+            <input
+                type="text"
+                placeholder="Username"
+                value={createUserReq.username}
+                onChange={(e) => setCreateUserReq({
+                    ...createUserReq,
+                    username: e.target.value
+                })}
+            />
+            <select
+                value={createUserReq.role}
+                onChange={(e) => setCreateUserReq({
+                    ...createUserReq,
+                    role: e.target.value
+                })}
+            >
+                <option value="">Role</option>
+                <option value="pengadaan">Pengadaan</option>
+                <option value="gudang">Gudang</option>
+                <option value="produksi">Produksi</option>
+                <option value="distribusi">Distribusi</option>
+            </select>
+            <button onClick={handleOnSubmitAddUser}>Add</button>
+        </Modal>
         <table>
             <thead>
                 <tr>
