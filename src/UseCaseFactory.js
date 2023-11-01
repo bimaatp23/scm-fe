@@ -1,5 +1,21 @@
 import { UserService } from "./services/UserService"
 
+// Time Use Case
+
+export class TimeUseCase {
+    // returnDate
+    get() {
+        const customDate = ""
+        const currentDate = new Date()
+        if (customDate != "") {
+            currentDate.setFullYear(customDate.split("-")[0])
+            currentDate.setMonth(customDate.split("-")[1] - 1)
+            currentDate.setDate(customDate.split("-")[2])
+        }
+        return currentDate
+    }
+}
+
 // Session Use Case
 
 export class SessionUseCase {
@@ -55,8 +71,10 @@ export class DeleteUserUseCase {
 }
 
 export class UseCaseFactory {
+    // Time Use Case
+    currentTime() { return new TimeUseCase() }
     // Session Use Case
-    current() { return new SessionUseCase() }
+    currentSession() { return new SessionUseCase() }
     // User Use Case
     login() { return new LoginUseCase() }
     getUserList() { return new GetUserListUseCase() }

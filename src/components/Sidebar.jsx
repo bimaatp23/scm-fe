@@ -2,10 +2,10 @@ import { UseCaseFactory } from "../UseCaseFactory"
 
 export default function Sidebar() {
     const useCaseFactory = new UseCaseFactory()
-    const currentSession = useCaseFactory.current().get()
+    const currentSession = useCaseFactory.currentSession().get()
 
     const onLogout = () => {
-        useCaseFactory.current().clear()
+        useCaseFactory.currentSession().clear()
         window.location.assign("/login")
     }
 
@@ -17,7 +17,7 @@ export default function Sidebar() {
                 </div>
                 <ul>
                     <ItemLink path="/" name="Dashboard" />
-                    {currentSession.role === 'admin' ?
+                    {currentSession.role === "admin" ?
                         <>
                             <ItemLink path="/user-list" name="User List" />
                         </>

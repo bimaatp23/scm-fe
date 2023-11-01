@@ -5,7 +5,7 @@ import ClientWrapper from "./components/ClientWrapper"
 export function Middleware(props) {
     const { isLogin, children } = props
     const useCaseFactory = new UseCaseFactory()
-    const currentSession = useCaseFactory.current().get()
+    const currentSession = useCaseFactory.currentSession().get()
 
     useEffect(() => {
         if (isLogin) {

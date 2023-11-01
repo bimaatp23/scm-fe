@@ -3,7 +3,7 @@ import TitlePage from "../components/TitlePage"
 
 export default function Dashboard() {
     const useCaseFactory = new UseCaseFactory()
-    const currentSession = useCaseFactory.current().get()
+    const currentSession = useCaseFactory.currentSession().get()
 
     return <>
         <TitlePage>Dashboard</TitlePage>
