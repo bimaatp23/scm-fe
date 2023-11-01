@@ -1,13 +1,9 @@
 import { UseCaseFactory } from "../UseCaseFactory"
 
-export default function Sidebar() {
+export default function Sidebar(props) {
+    const { openModalChangePassword, doLogout } = props
     const useCaseFactory = new UseCaseFactory()
     const currentSession = useCaseFactory.currentSession().get()
-
-    const onLogout = () => {
-        useCaseFactory.currentSession().clear()
-        window.location.assign("/login")
-    }
 
     return (
         <div className="flex flex-col justify-between text-left bg-sky-700 h-screen fixed w-full top-0 bottom-0 left-0 col-span-1 text-white pt-6">
@@ -27,8 +23,8 @@ export default function Sidebar() {
             </div>
             <div>
                 <ul>
-                    <ItemLink path="#" name="Setting" />
-                    <ItemFunction onClick={onLogout} name="Log out" />
+                    <ItemFunction onClick={openModalChangePassword} name="Change Password" />
+                    <ItemFunction onClick={doLogout} name="Log out" />
                 </ul>
             </div>
         </div>
