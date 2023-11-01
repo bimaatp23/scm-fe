@@ -24,47 +24,60 @@ export class UserService {
             )
     }
 
+    create(createUserReq) {
+        return from(axios.post(this.endpoint + "/create", createUserReq, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
+
+    update(updateUserReq) {
+        return from(axios.post(this.endpoint + "/update", updateUserReq, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
+
+    delete(deleteUserReq) {
+        return from(axios.post(this.endpoint + "/delete", deleteUserReq, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
+
+    changePassword(deleteUserReq) {
+        return from(axios.post(this.endpoint + "/change-password", deleteUserReq, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
+
     getList() {
         return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
-            .pipe(
-                map((response) => {
-                    return response.data
-                }),
-                catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
-                    return of(error.response.data)
-                })
-            )
-    }
-
-    createUser(createUserReq) {
-        return from(axios.post(this.endpoint + "/create-user", createUserReq, this.baseConfig.jwtConfig))
-            .pipe(
-                map((response) => {
-                    return response.data
-                }),
-                catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
-                    return of(error.response.data)
-                })
-            )
-    }
-
-    updateUser(updateUserReq) {
-        return from(axios.post(this.endpoint + "/update-user", updateUserReq, this.baseConfig.jwtConfig))
-            .pipe(
-                map((response) => {
-                    return response.data
-                }),
-                catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
-                    return of(error.response.data)
-                })
-            )
-    }
-
-    deleteUser(deleteUserReq) {
-        return from(axios.post(this.endpoint + "/delete-user", deleteUserReq, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data

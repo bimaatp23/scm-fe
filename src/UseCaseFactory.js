@@ -46,27 +46,33 @@ export class LoginUseCase {
     }
 }
 
-export class GetUserListUseCase {
-    execute() {
-        return new UserService().getList()
-    }
-}
-
 export class CreateUserUseCase {
     execute(createUserReq) {
-        return new UserService().createUser(createUserReq)
+        return new UserService().create(createUserReq)
     }
 }
 
 export class UpdateUserUseCase {
     execute(updateUserReq) {
-        return new UserService().updateUser(updateUserReq)
+        return new UserService().update(updateUserReq)
     }
 }
 
 export class DeleteUserUseCase {
     execute(deleteUserReq) {
-        return new UserService().deleteUser(deleteUserReq)
+        return new UserService().delete(deleteUserReq)
+    }
+}
+
+export class ChangePasswordUseCase {
+    execute(changePasswordReq) {
+        return new UserService().changePassword(changePasswordReq)
+    }
+}
+
+export class GetUserListUseCase {
+    execute() {
+        return new UserService().getList()
     }
 }
 
@@ -77,8 +83,9 @@ export class UseCaseFactory {
     currentSession() { return new SessionUseCase() }
     // User Use Case
     login() { return new LoginUseCase() }
-    getUserList() { return new GetUserListUseCase() }
     createUser() { return new CreateUserUseCase() }
     updateUser() { return new UpdateUserUseCase() }
     deleteUser() { return new DeleteUserUseCase() }
+    changePassword() { return new ChangePasswordUseCase() }
+    getUserList() { return new GetUserListUseCase() }
 }

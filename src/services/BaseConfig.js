@@ -16,7 +16,7 @@ export class BaseConfig {
     jwtConfig = {
         headers: {
             "Content-Type": "multipart/form-data",
-            "Authorization": "Bearer " + jsrsasign.jws.JWS.sign(null, { alg: 'HS256' }, { ...this.sessionUseCase.get(), exp: this.expTime }, process.env.REACT_APP_SECRET_KEY)
+            "Authorization": "Bearer " + jsrsasign.jws.JWS.sign(null, { alg: 'HS256' }, { ...this.sessionUseCase.get() }, process.env.REACT_APP_SECRET_KEY)
         }
     }
 }
