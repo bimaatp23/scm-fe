@@ -51,7 +51,7 @@ export default function ClientWrapper(props) {
         </div>
         <div className="bg-white fixed h-[100vh] w-[80vw] right-0 overflow-y-scroll">
             <div className="relative">
-                <div className="col-span-5 w-full p-8">
+                <div className="p-8">
                     {children}
                 </div>
             </div>

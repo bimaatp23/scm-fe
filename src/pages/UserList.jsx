@@ -92,9 +92,11 @@ export default function UserList() {
 
     return <>
         <TitlePage>User List</TitlePage>
-        <button onClick={() => setIsModalAddOpen(true)}>Add User</button>
+        <button onClick={() => setIsModalAddOpen(true)} className="bg-sky-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg mb-3 focus:shadow-outline focus:outline-none">Add User</button>
         <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
+            <p className="text-xl font-bold mb-4">Add User</p>
             <input
+                className="border border-black rounded-sm py-2 pl-2 mr-2"
                 type="text"
                 placeholder="Name"
                 value={createUserReq.name}
@@ -104,6 +106,7 @@ export default function UserList() {
                 })}
             />
             <input
+                className="border border-black rounded-sm py-2 pl-2 mr-2"
                 type="text"
                 placeholder="Username"
                 value={createUserReq.username}
@@ -113,6 +116,7 @@ export default function UserList() {
                 })}
             />
             <select
+                className="border border-black rounded-sm py-2 pl-2 mr-2"
                 value={createUserReq.role}
                 onChange={(e) => setCreateUserReq({
                     ...createUserReq,
@@ -125,34 +129,38 @@ export default function UserList() {
                 <option value="produksi">Produksi</option>
                 <option value="distribusi">Distribusi</option>
             </select>
-            <button onClick={handleOnSubmitAddUser}>Add</button>
+            <button className="bg-sky-700 text-white font-semibold text-center rounded-md py-2 px-4 ml-2 hover:bg-sky-500" onClick={handleOnSubmitAddUser}>Add</button>
         </Modal>
-        <table>
-            <thead>
+        <table className="border-2 border-slate-300">
+            <thead className="bg-slate-200">
                 <tr>
-                    <th className="border border-black py-1 px-10">#</th>
-                    <th className="border border-black py-1 px-10">Name</th>
-                    <th className="border border-black py-1 px-10">Username</th>
-                    <th className="border border-black py-1 px-10">Role</th>
-                    <th className="border border-black py-1 px-10">Action</th>
+                    <th className="border-y-2 py-3 px-4 border-slate-300">#</th>
+                    <th className="border-y-2 py-3 pl-2 pr-10 border-slate-300 text-start">Name</th>
+                    <th className="border-y-2 py-3 px-10 border-slate-300 text-start">Username</th>
+                    <th className="border-y-2 py-3 px-10 border-slate-300 text-start">Role</th>
+                    <th className="border-y-2 py-3 px-10 border-slate-300 text-start">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {userList.map((data, index) => {
                     return <tr key={index}>
-                        <td className="border border-black py-1 px-10">{index + 1}</td>
-                        <td className="border border-black py-1 px-10">{data.name}</td>
-                        <td className="border border-black py-1 px-10">{data.username}</td>
-                        <td className="border border-black py-1 px-10">{data.role}</td>
-                        <td className="border border-black py-1 px-10">
-                            <p><span onClick={() => {
+                        <td className="border-y-2 py-3 px-4 border-slate-300">{index + 1}</td>
+                        <td className="border-y-2 py-3 pl-2 pr-10 border-slate-300 text-start">{data.name}</td>
+                        <td className="border-y-2 py-3 px-10 border-slate-300 text-start">{data.username}</td>
+                        <td className="border-y-2 py-3 px-10 border-slate-300 text-start">{data.role}</td>
+                        <td className="border-y-2 py-3 px-10 border-slate-300 text-start">
+                            <p><span 
+                            className="bg-amber-400 px-4 py-2 rounded-md font-semibold text-white hover:bg-amber-300"
+                            onClick={() => {
                                 setUpdateUserReq({
                                     name: data.name,
                                     username: data.username,
                                     role: data.role
                                 })
                                 setIsModalUpdateOpen(true)
-                            }}>Edit</span> | <span onClick={() => {
+                            }}>Edit</span> | <span 
+                            className="bg-red-500 px-4 py-2 rounded-md font-semibold text-white hover:bg-red-400"
+                            onClick={() => {
                                 setDeleteUserReq({
                                     username: data.username
                                 })
@@ -164,7 +172,9 @@ export default function UserList() {
             </tbody>
         </table>
         <Modal isOpen={isModalUpdateOpen} onClose={() => setIsModalUpdateOpen(false)}>
+            <p className="text-xl font-bold mb-4">Edit Profile</p>
             <input
+                className="border border-black rounded-sm py-2 pl-2 mr-2"
                 type="text"
                 placeholder="Name"
                 value={updateUserReq.name}
@@ -174,6 +184,7 @@ export default function UserList() {
                 })}
             />
             <select
+                className="border border-black rounded-sm py-2 pl-2 mr-2"
                 value={updateUserReq.role}
                 onChange={(e) => setUpdateUserReq({
                     ...updateUserReq,
@@ -186,11 +197,13 @@ export default function UserList() {
                 <option value="produksi">Produksi</option>
                 <option value="distribusi">Distribusi</option>
             </select>
-            <button onClick={handleOnSubmitUpdateUser}>Update</button>
+            <button className="bg-amber-400 rounded-md py-2 px-4 ml-2 hover:bg-amber-300" onClick={handleOnSubmitUpdateUser}>Update</button>
         </Modal>
         <Modal isOpen={isModalDeleteOpen} onClose={() => setIsModalDeleteOpen(false)}>
-            <p>Yakin hapus user ({deleteUserReq.username}) ?</p>
-            <button onClick={handleOnSubmitDeleteUser}>Delete</button>
+            <p className="text-lg">Yakin hapus user ({deleteUserReq.username}) ?</p>
+            <div className="flex justify-center mt-2">
+                <button className="bg-red-500 rounded-md py-2 px-4 mt-2 text-lg font-bold text-white" onClick={handleOnSubmitDeleteUser}>Delete</button>
+            </div>
         </Modal>
     </>
 }
