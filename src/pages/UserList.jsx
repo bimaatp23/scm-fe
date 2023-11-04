@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import Button from "../components/Button"
+import Input from "../components/Input"
 import Modal from "../components/Modal"
 import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
@@ -102,10 +103,12 @@ export default function UserList() {
         >
             Add User
         </Button>
-        <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
-            <p className="text-xl font-bold text-center">Add User</p>
-            <input
-                className="border border-black rounded-sm py-2 pl-2"
+        <Modal
+            isOpen={isModalAddOpen}
+            onClose={() => setIsModalAddOpen(false)}
+            title="Add User"
+        >
+            <Input
                 type="text"
                 placeholder="Name"
                 value={createUserReq.name}
@@ -114,8 +117,7 @@ export default function UserList() {
                     name: e.target.value
                 })}
             />
-            <input
-                className="border border-black rounded-sm py-2 pl-2"
+            <Input
                 type="text"
                 placeholder="Username"
                 value={createUserReq.username}
@@ -193,10 +195,12 @@ export default function UserList() {
                 </TableRow>
             })}
         </Table>
-        <Modal isOpen={isModalUpdateOpen} onClose={() => setIsModalUpdateOpen(false)}>
-            <p className="text-xl font-bold text-center">Edit User</p>
-            <input
-                className="border border-black rounded-sm py-2 pl-2"
+        <Modal
+            isOpen={isModalUpdateOpen}
+            onClose={() => setIsModalUpdateOpen(false)}
+            title="Edit User"
+        >
+            <Input
                 type="text"
                 placeholder="Name"
                 value={updateUserReq.name}
@@ -227,8 +231,11 @@ export default function UserList() {
                 Update
             </Button>
         </Modal>
-        <Modal isOpen={isModalDeleteOpen} onClose={() => setIsModalDeleteOpen(false)}>
-            <p className="text-xl font-bold text-center">Delete User</p>
+        <Modal
+            isOpen={isModalDeleteOpen}
+            onClose={() => setIsModalDeleteOpen(false)}
+            title="Delete User"
+        >
             <p className="text-lg">Yakin hapus user ({deleteUserReq.username}) ?</p>
             <Button
                 onClick={handleOnSubmitDeleteUser}

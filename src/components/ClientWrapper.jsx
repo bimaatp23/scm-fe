@@ -1,6 +1,8 @@
 import moment from "moment/moment"
 import React, { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
+import Button from "./Button"
+import Input from "./Input"
 import Modal from "./Modal"
 import Sidebar from "./Sidebar"
 
@@ -56,8 +58,12 @@ export default function ClientWrapper(props) {
                 </div>
             </div>
         </div>
-        <Modal isOpen={isModalChangePasswordOpen} onClose={() => setIsModalChangePasswordOpen(false)}>
-            <input
+        <Modal
+            isOpen={isModalChangePasswordOpen}
+            onClose={() => setIsModalChangePasswordOpen(false)}
+            title="Change Password"
+        >
+            <Input
                 type="password"
                 placeholder="Old Password"
                 value={changePasswordReq.old_password}
@@ -66,7 +72,7 @@ export default function ClientWrapper(props) {
                     old_password: e.target.value
                 })}
             />
-            <input
+            <Input
                 type="password"
                 placeholder="New Password"
                 value={changePasswordReq.new_password}
@@ -75,7 +81,7 @@ export default function ClientWrapper(props) {
                     new_password: e.target.value
                 })}
             />
-            <input
+            <Input
                 type="password"
                 placeholder="Retype New Password"
                 value={changePasswordReq.renew_password}
@@ -84,7 +90,13 @@ export default function ClientWrapper(props) {
                     renew_password: e.target.value
                 })}
             />
-            <button onClick={handleOnSubmitChangePassword}>Update</button>
+            <Button
+                onClick={handleOnSubmitChangePassword}
+                size="md"
+                color="yellow"
+            >
+                Update
+            </Button>
         </Modal>
         <p className="fixed right-4 bottom-2">{moment(currentTime).format("YYYY-MM-DD HH:mm:ss")}</p>
     </div>

@@ -9,17 +9,21 @@ export function Table(props) {
 export function TableRowHead(props) {
     const { children } = props
 
-    return <tr className="bg-slate-200 font-bold text-center">
-        {children}
-    </tr>
+    return <thead>
+        <tr className="bg-slate-200 font-bold text-center">
+            {children}
+        </tr>
+    </thead>
 }
 
 export function TableRow(props) {
     const { children } = props
 
-    return <tr>
-        {children}
-    </tr>
+    return <tbody>
+        <tr>
+            {children}
+        </tr>
+    </tbody>
 }
 
 export function TableCell(props) {

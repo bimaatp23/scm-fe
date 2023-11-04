@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import Button from "../components/Button"
+import Input from "../components/Input"
 
 export default function CreateRetail() {
   const useCaseFactory = new UseCaseFactory()
@@ -45,91 +46,91 @@ export default function CreateRetail() {
       <div className="bg-white shadow-md rounded-md w-96 p-4">
         <h1 className="text-2xl font-bold mb-2">Create Retail</h1>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="name"
             type="text"
             placeholder="Name"
             value={createRetailReq.name}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="username"
             type="text"
             placeholder="Username"
             value={createRetailReq.username}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="password"
             type="password"
             placeholder="Password"
             value={createRetailReq.password}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="re_password"
             type="password"
             placeholder="Re-Password"
             value={createRetailReq.re_password}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="business_name"
             type="text"
             placeholder="Business Name"
             value={createRetailReq.business_name}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="address"
             type="text"
             placeholder="Address"
             value={createRetailReq.address}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="email"
             type="text"
             placeholder="Email"
             value={createRetailReq.email}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-4">
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
+          <Input
             id="phone"
             type="text"
             placeholder="Phone"
             value={createRetailReq.phone}
             onChange={handleOnChange}
             onKeyDown={handleOnEnter}
+            className="w-full"
           />
         </div>
         <div className="mb-2 flex items-center justify-center">
