@@ -22,7 +22,7 @@ export default function Login() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const onLogin = (e) => {
     e.preventDefault()
     useCaseFactory.login().execute(loginReq)
       .subscribe({
@@ -34,9 +34,15 @@ export default function Login() {
       })
   }
 
+  const handleOnEnter = (e) => {
+    if (e.key == "Enter") {
+      onLogin(e)
+    }
+  }
+
   return (
     <div className="h-screen flex justify-center items-center bg-sky-700">
-      <form className="bg-white shadow-md rounded-md w-80 p-4 sm:w-96 sm:p-6" onSubmit={handleSubmit}>
+      <div className="bg-white shadow-md rounded-md w-80 p-4 sm:w-96 sm:p-6">
         <h1 className="text-2xl font-bold mb-4 sm:text-3xl sm:mb-6">Login</h1>
         <div className="mt-2 mb-4">
           <label className="flex justify-start text-base font-semibold mb-2 ml-1 sm:text-lg" htmlFor="username">
@@ -49,6 +55,7 @@ export default function Login() {
             placeholder="Username"
             value={loginReq.username}
             onChange={handleUsernameChange}
+            onKeyDown={handleOnEnter}
           />
         </div>
         <div className="my-2">
@@ -62,17 +69,18 @@ export default function Login() {
             placeholder="Password"
             value={loginReq.password}
             onChange={handlePasswordChange}
+            onKeyDown={handleOnEnter}
           />
         </div>
         <div className="flex items-center justify-center">
           <button
             className="bg-sky-700 hover:bg-sky-500 text-white text-base font-bold py-2 px-4 mt-2 rounded sm:text-lg focus:outline-none focus:shadow-outline"
-            type="submit"
+            onClick={onLogin}
           >
             Log In
           </button>
         </div>
-      </form>
+      </div>
     </div>
   )
 }

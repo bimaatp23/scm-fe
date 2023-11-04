@@ -1,5 +1,5 @@
 const Navbar = () => {
-    return(
+    return (
         <div className="bg-blue-500 p-4">
             <ul className="flex justify-center space-x-4">
                 <li><a href="#">Home</a></li>

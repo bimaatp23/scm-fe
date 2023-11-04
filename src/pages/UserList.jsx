@@ -149,23 +149,23 @@ export default function UserList() {
                         <td className="border-y-2 py-3 px-10 border-slate-300 text-start">{data.username}</td>
                         <td className="border-y-2 py-3 px-10 border-slate-300 text-start">{data.role}</td>
                         <td className="border-y-2 py-3 px-10 border-slate-300 text-start">
-                            <p><span 
-                            className="bg-amber-400 px-4 py-2 rounded-md font-semibold text-white hover:bg-amber-300"
-                            onClick={() => {
-                                setUpdateUserReq({
-                                    name: data.name,
-                                    username: data.username,
-                                    role: data.role
-                                })
-                                setIsModalUpdateOpen(true)
-                            }}>Edit</span> | <span 
-                            className="bg-red-500 px-4 py-2 rounded-md font-semibold text-white hover:bg-red-400"
-                            onClick={() => {
-                                setDeleteUserReq({
-                                    username: data.username
-                                })
-                                setIsModalDeleteOpen(true)
-                            }}>Hapus</span></p>
+                            <p><span
+                                className="bg-amber-400 px-4 py-2 rounded-md font-semibold text-white hover:bg-amber-300"
+                                onClick={() => {
+                                    setUpdateUserReq({
+                                        name: data.name,
+                                        username: data.username,
+                                        role: data.role
+                                    })
+                                    setIsModalUpdateOpen(true)
+                                }}>Edit</span> | <span
+                                    className="bg-red-500 px-4 py-2 rounded-md font-semibold text-white hover:bg-red-400"
+                                    onClick={() => {
+                                        setDeleteUserReq({
+                                            username: data.username
+                                        })
+                                        setIsModalDeleteOpen(true)
+                                    }}>Hapus</span></p>
                         </td>
                     </tr>
                 })}

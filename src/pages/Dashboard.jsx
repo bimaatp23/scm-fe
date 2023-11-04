@@ -8,8 +8,6 @@ export default function Dashboard() {
     return (
         <div>
             <TitlePage>Dashboard</TitlePage>
-            {/* <div className="flex justify-center">
-            </div> */}
             <div className="w-80 bg-sky-100 rounded-2xl py-5 px-4">
                 <div className="text-xl font-bold mb-6 text-center">
                     Profile
