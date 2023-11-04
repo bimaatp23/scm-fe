@@ -3,6 +3,7 @@ import "./App.css"
 import { Middleware as Auth } from "./Middleware"
 import CreateRetail from "./pages/CreateRetail.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
+import InventoryList from "./pages/InventoryList.jsx"
 import Login from "./pages/Login.jsx"
 import UserList from "./pages/UserList"
 
@@ -17,6 +18,7 @@ function App() {
           {/* Session Active */}
           <Route path="/" element={<Auth isLogin={true}><Dashboard /></Auth>} />
           <Route path="/user-list" element={<Auth isLogin={true}><UserList /></Auth>} />
+          <Route path="/inventory-list" element={<Auth isLogin={true}><InventoryList /></Auth>} />
         </Routes>
       </BrowserRouter>
     </div>

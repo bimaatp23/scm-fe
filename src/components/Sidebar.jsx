@@ -16,6 +16,13 @@ export default function Sidebar(props) {
                     {currentSession.role === "admin" ?
                         <>
                             <ItemLink path="/user-list" name="User List" />
+                            <ItemLink path="/inventory-list" name="Inventory List" />
+                        </>
+                        : <></>
+                    }
+                    {currentSession.role === "gudang" ?
+                        <>
+                            <ItemLink path="/inventory-list" name="Inventory List" />
                         </>
                         : <></>
                     }

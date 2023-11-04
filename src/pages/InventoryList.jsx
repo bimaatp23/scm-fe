@@ -14,10 +14,11 @@ export default function InventoryList() {
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
-    const [createUserReq, setCreateUserReq] = useState({
-        name: "",
-        username: "",
-        role: ""
+    const [createInventoryReq, setCreateInventoryReq] = useState({
+        item_name: "",
+        description: "",
+        unit: "",
+        price: "",
     })
     const [updateUserReq, setUpdateUserReq] = useState({
         name: "",
@@ -43,17 +44,16 @@ export default function InventoryList() {
             })
     }
 
-    const handleOnSubmitAddUser = () => {
-        useCaseFactory.createUser().execute(createUserReq)
+    const handleAddInventory = () => {
+        useCaseFactory.createInventory().execute(createInventoryReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
                         console.log(response.error_schema.error_message)
                         setIsModalAddOpen(false)
-                        setCreateUserReq({
-                            name: "",
-                            username: "",
-                            role: ""
+                        setCreateInventoryReq({
+                            item_name: "",
+                            unit: ""
                         })
                         getInventoryList()
                     }
@@ -105,46 +105,51 @@ export default function InventoryList() {
                     color="blue"
                     className="mb-2"
                 >
-                    Add User
+                    Add Inventory Item
                 </Button>
                 <Modal
                     isOpen={isModalAddOpen}
                     onClose={() => setIsModalAddOpen(false)}
-                    title="Add User"
+                    title="Add Inventory Item"
                 >
                     <Input
                         type="text"
-                        placeholder="Name"
-                        value={createUserReq.name}
-                        onChange={(e) => setCreateUserReq({
-                            ...createUserReq,
-                            name: e.target.value
+                        placeholder="Item Name"
+                        value={createInventoryReq.item_name}
+                        onChange={(e) => setCreateInventoryReq({
+                            ...createInventoryReq,
+                            item_name: e.target.value
                         })}
                     />
                     <Input
                         type="text"
-                        placeholder="Username"
-                        value={createUserReq.username}
-                        onChange={(e) => setCreateUserReq({
-                            ...createUserReq,
-                            username: e.target.value
+                        placeholder="Description"
+                        value={createInventoryReq.description}
+                        onChange={(e) => setCreateInventoryReq({
+                            ...createInventoryReq,
+                            description: e.target.value
                         })}
                     />
-                    <Select
-                        value={createUserReq.role}
-                        onChange={(e) => setCreateUserReq({
-                            ...createUserReq,
-                            role: e.target.value
+                    <Input
+                        type="text"
+                        placeholder="Unit"
+                        value={createInventoryReq.unit}
+                        onChange={(e) => setCreateInventoryReq({
+                            ...createInventoryReq,
+                            unit: e.target.value
                         })}
-                    >
-                        <SelectOption value="">Role</SelectOption>
-                        <SelectOption value="pengadaan">Pengadaan</SelectOption>
-                        <SelectOption value="gudang">Gudang</SelectOption>
-                        <SelectOption value="produksi">Produksi</SelectOption>
-                        <SelectOption value="distribusi">Distribusi</SelectOption>
-                    </Select>
+                    />
+                    <Input
+                        type="number"
+                        placeholder="Price"
+                        value={createInventoryReq.price}
+                        onChange={(e) => setCreateInventoryReq({
+                            ...createInventoryReq,
+                            price: e.target.value
+                        })}
+                    />
                     <Button
-                        onClick={handleOnSubmitAddUser}
+                        onClick={handleAddInventory}
                         size="md"
                         color="blue"
                     >
@@ -156,7 +161,9 @@ export default function InventoryList() {
             <TableRowHead>
                 <TableCell>#</TableCell>
                 <TableCell>Item Name</TableCell>
+                <TableCell>Description</TableCell>
                 <TableCell>Unit</TableCell>
+                <TableCell>Price</TableCell>
                 <TableCell>Stock</TableCell>
                 {currentSession.role == "admin" ?
                     <TableCell>Action</TableCell>
@@ -166,7 +173,9 @@ export default function InventoryList() {
                 return <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{data.item_name}</TableCell>
+                    <TableCell>{data.description}</TableCell>
                     <TableCell>{data.unit}</TableCell>
+                    <TableCell>{data.price}</TableCell>
                     <TableCell>{data.stock}</TableCell>
                     {currentSession.role == "admin" ?
                         <TableCell>

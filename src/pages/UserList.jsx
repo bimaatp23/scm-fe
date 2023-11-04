@@ -42,7 +42,7 @@ export default function UserList() {
             })
     }
 
-    const handleOnSubmitAddUser = () => {
+    const handleAddUser = () => {
         useCaseFactory.createUser().execute(createUserReq)
             .subscribe({
                 next: (response) => {
@@ -60,7 +60,7 @@ export default function UserList() {
             })
     }
 
-    const handleOnSubmitUpdateUser = () => {
+    const handleUpdateUser = () => {
         useCaseFactory.updateUser().execute(updateUserReq)
             .subscribe({
                 next: (response) => {
@@ -78,7 +78,7 @@ export default function UserList() {
             })
     }
 
-    const handleOnSubmitDeleteUser = () => {
+    const handleDeleteUser = () => {
         useCaseFactory.deleteUser().execute(deleteUserReq)
             .subscribe({
                 next: (response) => {
@@ -141,7 +141,7 @@ export default function UserList() {
                 <SelectOption value="distribusi">Distribusi</SelectOption>
             </Select>
             <Button
-                onClick={handleOnSubmitAddUser}
+                onClick={handleAddUser}
                 size="md"
                 color="blue"
             >
@@ -223,7 +223,7 @@ export default function UserList() {
                 <SelectOption value="distribusi">Distribusi</SelectOption>
             </Select>
             <Button
-                onClick={handleOnSubmitUpdateUser}
+                onClick={handleUpdateUser}
                 size="md"
                 color="yellow"
             >
@@ -237,7 +237,7 @@ export default function UserList() {
         >
             <p className="text-lg">Yakin hapus user ({deleteUserReq.username}) ?</p>
             <Button
-                onClick={handleOnSubmitDeleteUser}
+                onClick={handleDeleteUser}
                 size="md"
                 color="red"
             >
