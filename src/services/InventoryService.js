@@ -22,4 +22,17 @@ export class InventoryService {
                 })
             )
     }
+
+    create(createInventoryReq) {
+        return from(axios.post(this.endpoint + "/create", createInventoryReq, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
 }

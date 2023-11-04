@@ -90,6 +90,12 @@ export class GetInventoryListUseCase {
     }
 }
 
+export class CreateInventoryUseCase {
+    execute(createInventoryReq) {
+        return new InventoryService().create(createInventoryReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -105,4 +111,5 @@ export class UseCaseFactory {
     createRetail() { return new CreateRetailUseCase() }
     // Inventory Use Case
     getInventoryList() { return new GetInventoryListUseCase() }
+    createInventory() { return new CreateInventoryUseCase() }
 }
