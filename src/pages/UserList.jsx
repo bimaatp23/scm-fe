@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import Button from "../components/Button"
 import Modal from "../components/Modal"
+import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
 export default function UserList() {
@@ -145,57 +146,53 @@ export default function UserList() {
                 Add
             </Button>
         </Modal>
-        <table className="border-2 border-slate-300">
-            <thead className="bg-slate-200">
-                <tr>
-                    <th className="border-2 py-2 border-slate-300">#</th>
-                    <th className="border-2 py-2 border-slate-300 text-center">Name</th>
-                    <th className="border-2 py-2 border-slate-300 text-center">Username</th>
-                    <th className="border-2 py-2 border-slate-300 text-center">Role</th>
-                    <th className="border-2 py-2 border-slate-300 text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {userList.map((data, index) => {
-                    return <tr key={index}>
-                        <td className="border-2 py-2 px-4 border-slate-300">{index + 1}</td>
-                        <td className="border-2 py-2 pl-2 pr-10 border-slate-300">{data.name}</td>
-                        <td className="border-2 py-2 px-10 border-slate-300">{data.username}</td>
-                        <td className="border-2 py-2 px-10 border-slate-300">{data.role}</td>
-                        <td className="border-2 py-2 px-10 border-slate-300">
-                            <Button
-                                onClick={() => {
-                                    setUpdateUserReq({
-                                        name: data.name,
-                                        username: data.username,
-                                        role: data.role
-                                    })
-                                    setIsModalUpdateOpen(true)
-                                }}
-                                size="md"
-                                color="yellow"
-                                className="mx-1"
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setDeleteUserReq({
-                                        username: data.username
-                                    })
-                                    setIsModalDeleteOpen(true)
-                                }}
-                                size="md"
-                                color="red"
-                                className="mx-1"
-                            >
-                                Delete
-                            </Button>
-                        </td>
-                    </tr>
-                })}
-            </tbody>
-        </table>
+        <Table>
+            <TableRowHead>
+                <TableCell>#</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Action</TableCell>
+            </TableRowHead>
+            {userList.map((data, index) => {
+                return <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{data.name}</TableCell>
+                    <TableCell>{data.username}</TableCell>
+                    <TableCell>{data.role}</TableCell>
+                    <TableCell>
+                        <Button
+                            onClick={() => {
+                                setUpdateUserReq({
+                                    name: data.name,
+                                    username: data.username,
+                                    role: data.role
+                                })
+                                setIsModalUpdateOpen(true)
+                            }}
+                            size="md"
+                            color="yellow"
+                            className="mx-1"
+                        >
+                            Edit
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setDeleteUserReq({
+                                    username: data.username
+                                })
+                                setIsModalDeleteOpen(true)
+                            }}
+                            size="md"
+                            color="red"
+                            className="mx-1"
+                        >
+                            Delete
+                        </Button>
+                    </TableCell>
+                </TableRow>
+            })}
+        </Table>
         <Modal isOpen={isModalUpdateOpen} onClose={() => setIsModalUpdateOpen(false)}>
             <p className="text-xl font-bold text-center">Edit User</p>
             <input
