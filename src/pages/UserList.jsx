@@ -3,6 +3,7 @@ import { UseCaseFactory } from "../UseCaseFactory"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
+import { Select, SelectOption } from "../components/Select"
 import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
@@ -126,20 +127,19 @@ export default function UserList() {
                     username: e.target.value
                 })}
             />
-            <select
-                className="border border-black rounded-sm py-2 pl-2"
+            <Select
                 value={createUserReq.role}
                 onChange={(e) => setCreateUserReq({
                     ...createUserReq,
                     role: e.target.value
                 })}
             >
-                <option value="">Role</option>
-                <option value="pengadaan">Pengadaan</option>
-                <option value="gudang">Gudang</option>
-                <option value="produksi">Produksi</option>
-                <option value="distribusi">Distribusi</option>
-            </select>
+                <SelectOption value="">Role</SelectOption>
+                <SelectOption value="pengadaan">Pengadaan</SelectOption>
+                <SelectOption value="gudang">Gudang</SelectOption>
+                <SelectOption value="produksi">Produksi</SelectOption>
+                <SelectOption value="distribusi">Distribusi</SelectOption>
+            </Select>
             <Button
                 onClick={handleOnSubmitAddUser}
                 size="md"
@@ -209,20 +209,19 @@ export default function UserList() {
                     name: e.target.value
                 })}
             />
-            <select
-                className="border border-black rounded-sm py-2 pl-2"
+            <Select
                 value={updateUserReq.role}
                 onChange={(e) => setUpdateUserReq({
                     ...updateUserReq,
                     role: e.target.value
                 })}
             >
-                <option value="">Role</option>
-                <option value="pengadaan">Pengadaan</option>
-                <option value="gudang">Gudang</option>
-                <option value="produksi">Produksi</option>
-                <option value="distribusi">Distribusi</option>
-            </select>
+                <SelectOption value="">Role</SelectOption>
+                <SelectOption value="pengadaan">Pengadaan</SelectOption>
+                <SelectOption value="gudang">Gudang</SelectOption>
+                <SelectOption value="produksi">Produksi</SelectOption>
+                <SelectOption value="distribusi">Distribusi</SelectOption>
+            </Select>
             <Button
                 onClick={handleOnSubmitUpdateUser}
                 size="md"
