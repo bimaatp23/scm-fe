@@ -3,7 +3,6 @@ import { UseCaseFactory } from "../UseCaseFactory"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
-import { Select, SelectOption } from "../components/Select"
 import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
@@ -18,12 +17,14 @@ export default function InventoryList() {
         item_name: "",
         description: "",
         unit: "",
-        price: "",
+        price: ""
     })
-    const [updateUserReq, setUpdateUserReq] = useState({
-        name: "",
-        username: "",
-        role: ""
+    const [updateInventoryReq, setUpdateInventoryReq] = useState({
+        id: "",
+        item_name: "",
+        description: "",
+        unit: "",
+        price: ""
     })
     const [deleteUserReq, setDeleteUserReq] = useState({
         username: ""
@@ -61,14 +62,14 @@ export default function InventoryList() {
             })
     }
 
-    const handleOnSubmitUpdateUser = () => {
-        useCaseFactory.updateUser().execute(updateUserReq)
+    const handleUpdateInventory = () => {
+        useCaseFactory.updateInventory().execute(updateInventoryReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
                         console.log(response.error_schema.error_message)
                         setIsModalUpdateOpen(false)
-                        setUpdateUserReq({
+                        setUpdateInventoryReq({
                             name: "",
                             username: "",
                             role: ""
@@ -181,10 +182,12 @@ export default function InventoryList() {
                         <TableCell>
                             <Button
                                 onClick={() => {
-                                    setUpdateUserReq({
-                                        name: data.name,
-                                        username: data.username,
-                                        role: data.role
+                                    setUpdateInventoryReq({
+                                        id: data.id,
+                                        item_name: data.item_name,
+                                        description: data.description,
+                                        unit: data.unit,
+                                        price: data.price
                                     })
                                     setIsModalUpdateOpen(true)
                                 }}
@@ -214,32 +217,42 @@ export default function InventoryList() {
         <Modal
             isOpen={isModalUpdateOpen}
             onClose={() => setIsModalUpdateOpen(false)}
-            title="Edit User"
+            title="Edit Inventory"
         >
             <Input
                 type="text"
-                placeholder="Name"
-                value={updateUserReq.name}
-                onChange={(e) => setUpdateUserReq({
-                    ...updateUserReq,
-                    name: e.target.value
+                placeholder="Item Name"
+                value={updateInventoryReq.item_name}
+            />
+            <Input
+                type="text"
+                placeholder="Description"
+                value={updateInventoryReq.description}
+                onChange={(e) => setUpdateInventoryReq({
+                    ...updateInventoryReq,
+                    description: e.target.value
                 })}
             />
-            <Select
-                value={updateUserReq.role}
-                onChange={(e) => setUpdateUserReq({
-                    ...updateUserReq,
-                    role: e.target.value
+            <Input
+                type="text"
+                placeholder="Unit"
+                value={updateInventoryReq.unit}
+                onChange={(e) => setUpdateInventoryReq({
+                    ...updateInventoryReq,
+                    unit: e.target.value
                 })}
-            >
-                <SelectOption value="">Role</SelectOption>
-                <SelectOption value="pengadaan">Pengadaan</SelectOption>
-                <SelectOption value="gudang">Gudang</SelectOption>
-                <SelectOption value="produksi">Produksi</SelectOption>
-                <SelectOption value="distribusi">Distribusi</SelectOption>
-            </Select>
+            />
+            <Input
+                type="number"
+                placeholder="Price"
+                value={updateInventoryReq.price}
+                onChange={(e) => setUpdateInventoryReq({
+                    ...updateInventoryReq,
+                    price: e.target.value
+                })}
+            />
             <Button
-                onClick={handleOnSubmitUpdateUser}
+                onClick={handleUpdateInventory}
                 size="md"
                 color="yellow"
             >
