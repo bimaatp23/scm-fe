@@ -8,17 +8,10 @@ export default function Login() {
     password: ""
   })
 
-  const handleUsernameChange = (e) => {
+  const handleOnChange = (e) => {
     setLoginReq({
       ...loginReq,
-      username: e.target.value
-    })
-  }
-
-  const handlePasswordChange = (e) => {
-    setLoginReq({
-      ...loginReq,
-      password: e.target.value
+      [e.target.id]: e.target.value
     })
   }
 
@@ -42,42 +35,52 @@ export default function Login() {
 
   return (
     <div className="h-screen flex justify-center items-center bg-sky-700">
-      <div className="bg-white shadow-md rounded-md w-80 p-4 sm:w-96 sm:p-6">
-        <h1 className="text-2xl font-bold mb-4 sm:text-3xl sm:mb-6">Login</h1>
-        <div className="mt-2 mb-4">
-          <label className="flex justify-start text-base font-semibold mb-2 ml-1 sm:text-lg" htmlFor="username">
-            Username
-          </label>
+      <div className="bg-white shadow-md rounded-md w-96 p-4">
+        <h1 className="text-2xl font-bold mb-2">Login</h1>
+        <div className="mb-4">
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
             id="username"
             type="text"
             placeholder="Username"
             value={loginReq.username}
-            onChange={handleUsernameChange}
+            onChange={handleOnChange}
             onKeyDown={handleOnEnter}
           />
         </div>
-        <div className="my-2">
-          <label className="flex justify-start text-base font-semibold mb-2 ml-1 sm:text-lg" htmlFor="password">
-            Password
-          </label>
+        <div className="mb-4">
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-0 focus:border-gray-600"
             id="password"
             type="password"
             placeholder="Password"
             value={loginReq.password}
-            onChange={handlePasswordChange}
+            onChange={handleOnChange}
             onKeyDown={handleOnEnter}
           />
         </div>
-        <div className="flex items-center justify-center">
+        <div className="mb-2 flex items-center justify-center">
           <button
-            className="bg-sky-700 hover:bg-sky-500 text-white text-base font-bold py-2 px-4 mt-2 rounded sm:text-lg focus:outline-none focus:shadow-outline"
+            className="bg-sky-700 hover:bg-sky-500 text-white font-bold py-1 px-2 rounded text-lg focus:outline-none focus:shadow-outline"
             onClick={onLogin}
           >
-            Log In
+            Login
+          </button>
+        </div>
+        <div className="flex items-center justify-center">
+          <p className="font-bold">Don't have an account?</p>
+        </div>
+        <div className="flex items-center justify-center">
+          <button
+            className="bg-green-700 hover:bg-green-500 text-white text-base font-bold py-1 px-2 rounded mx-1 focus:outline-none focus:shadow-outline"
+            onClick={() => window.location.assign("/create-retail")}
+          >
+            Create Retail
+          </button>
+          <button
+            className="bg-gray-700 hover:bg-gray-500 text-white text-base font-bold py-1 px-2 rounded mx-1 focus:outline-none focus:shadow-outline"
+          >
+            Create Supplier
           </button>
         </div>
       </div>
