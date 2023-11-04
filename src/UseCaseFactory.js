@@ -1,3 +1,4 @@
+import { InventoryService } from "./services/InventoryService"
 import { UserService } from "./services/UserService"
 
 // Time Use Case
@@ -82,6 +83,13 @@ export class CreateRetailUseCase {
     }
 }
 
+// Inventory Use Case
+export class GetInventoryListUseCase {
+    execute() {
+        return new InventoryService().getList()
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -95,4 +103,6 @@ export class UseCaseFactory {
     changePassword() { return new ChangePasswordUseCase() }
     getUserList() { return new GetUserListUseCase() }
     createRetail() { return new CreateRetailUseCase() }
+    // Inventory Use Case
+    getInventoryList() { return new GetInventoryListUseCase() }
 }
