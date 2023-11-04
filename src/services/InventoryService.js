@@ -48,4 +48,17 @@ export class InventoryService {
                 })
             )
     }
+
+    delete(deleteInventoryReq) {
+        return from(axios.post(this.endpoint + "/delete", deleteInventoryReq, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
 }
