@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
+import Button from "../components/Button"
 import Modal from "../components/Modal"
 import TitlePage from "../components/TitlePage"
 
@@ -92,11 +93,18 @@ export default function UserList() {
 
     return <>
         <TitlePage>User List</TitlePage>
-        <button onClick={() => setIsModalAddOpen(true)} className="bg-sky-700 hover:bg-sky-500 text-white font-bold py-2 px-4 rounded-lg mb-3 focus:shadow-outline focus:outline-none">Add User</button>
+        <Button
+            onClick={() => setIsModalAddOpen(true)}
+            size="md"
+            color="blue"
+            className="mb-2"
+        >
+            Add User
+        </Button>
         <Modal isOpen={isModalAddOpen} onClose={() => setIsModalAddOpen(false)}>
-            <p className="text-xl font-bold mb-4">Add User</p>
+            <p className="text-xl font-bold text-center">Add User</p>
             <input
-                className="border border-black rounded-sm py-2 pl-2 mr-2"
+                className="border border-black rounded-sm py-2 pl-2"
                 type="text"
                 placeholder="Name"
                 value={createUserReq.name}
@@ -106,7 +114,7 @@ export default function UserList() {
                 })}
             />
             <input
-                className="border border-black rounded-sm py-2 pl-2 mr-2"
+                className="border border-black rounded-sm py-2 pl-2"
                 type="text"
                 placeholder="Username"
                 value={createUserReq.username}
@@ -116,7 +124,7 @@ export default function UserList() {
                 })}
             />
             <select
-                className="border border-black rounded-sm py-2 pl-2 mr-2"
+                className="border border-black rounded-sm py-2 pl-2"
                 value={createUserReq.role}
                 onChange={(e) => setCreateUserReq({
                     ...createUserReq,
@@ -129,28 +137,33 @@ export default function UserList() {
                 <option value="produksi">Produksi</option>
                 <option value="distribusi">Distribusi</option>
             </select>
-            <button className="bg-sky-700 text-white font-semibold text-center rounded-md py-2 px-4 ml-2 hover:bg-sky-500" onClick={handleOnSubmitAddUser}>Add</button>
+            <Button
+                onClick={handleOnSubmitAddUser}
+                size="md"
+                color="blue"
+            >
+                Add
+            </Button>
         </Modal>
         <table className="border-2 border-slate-300">
             <thead className="bg-slate-200">
                 <tr>
-                    <th className="border-y-2 py-3 px-4 border-slate-300">#</th>
-                    <th className="border-y-2 py-3 pl-2 pr-10 border-slate-300 text-start">Name</th>
-                    <th className="border-y-2 py-3 px-10 border-slate-300 text-start">Username</th>
-                    <th className="border-y-2 py-3 px-10 border-slate-300 text-start">Role</th>
-                    <th className="border-y-2 py-3 px-10 border-slate-300 text-start">Action</th>
+                    <th className="border-2 py-2 border-slate-300">#</th>
+                    <th className="border-2 py-2 border-slate-300 text-center">Name</th>
+                    <th className="border-2 py-2 border-slate-300 text-center">Username</th>
+                    <th className="border-2 py-2 border-slate-300 text-center">Role</th>
+                    <th className="border-2 py-2 border-slate-300 text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {userList.map((data, index) => {
                     return <tr key={index}>
-                        <td className="border-y-2 py-3 px-4 border-slate-300">{index + 1}</td>
-                        <td className="border-y-2 py-3 pl-2 pr-10 border-slate-300 text-start">{data.name}</td>
-                        <td className="border-y-2 py-3 px-10 border-slate-300 text-start">{data.username}</td>
-                        <td className="border-y-2 py-3 px-10 border-slate-300 text-start">{data.role}</td>
-                        <td className="border-y-2 py-3 px-10 border-slate-300 text-start">
-                            <p><span
-                                className="bg-amber-400 px-4 py-2 rounded-md font-semibold text-white hover:bg-amber-300"
+                        <td className="border-2 py-2 px-4 border-slate-300">{index + 1}</td>
+                        <td className="border-2 py-2 pl-2 pr-10 border-slate-300">{data.name}</td>
+                        <td className="border-2 py-2 px-10 border-slate-300">{data.username}</td>
+                        <td className="border-2 py-2 px-10 border-slate-300">{data.role}</td>
+                        <td className="border-2 py-2 px-10 border-slate-300">
+                            <Button
                                 onClick={() => {
                                     setUpdateUserReq({
                                         name: data.name,
@@ -158,23 +171,35 @@ export default function UserList() {
                                         role: data.role
                                     })
                                     setIsModalUpdateOpen(true)
-                                }}>Edit</span> | <span
-                                    className="bg-red-500 px-4 py-2 rounded-md font-semibold text-white hover:bg-red-400"
-                                    onClick={() => {
-                                        setDeleteUserReq({
-                                            username: data.username
-                                        })
-                                        setIsModalDeleteOpen(true)
-                                    }}>Hapus</span></p>
+                                }}
+                                size="md"
+                                color="yellow"
+                                className="mx-1"
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setDeleteUserReq({
+                                        username: data.username
+                                    })
+                                    setIsModalDeleteOpen(true)
+                                }}
+                                size="md"
+                                color="red"
+                                className="mx-1"
+                            >
+                                Delete
+                            </Button>
                         </td>
                     </tr>
                 })}
             </tbody>
         </table>
         <Modal isOpen={isModalUpdateOpen} onClose={() => setIsModalUpdateOpen(false)}>
-            <p className="text-xl font-bold mb-4">Edit Profile</p>
+            <p className="text-xl font-bold text-center">Edit User</p>
             <input
-                className="border border-black rounded-sm py-2 pl-2 mr-2"
+                className="border border-black rounded-sm py-2 pl-2"
                 type="text"
                 placeholder="Name"
                 value={updateUserReq.name}
@@ -184,7 +209,7 @@ export default function UserList() {
                 })}
             />
             <select
-                className="border border-black rounded-sm py-2 pl-2 mr-2"
+                className="border border-black rounded-sm py-2 pl-2"
                 value={updateUserReq.role}
                 onChange={(e) => setUpdateUserReq({
                     ...updateUserReq,
@@ -197,13 +222,24 @@ export default function UserList() {
                 <option value="produksi">Produksi</option>
                 <option value="distribusi">Distribusi</option>
             </select>
-            <button className="bg-amber-400 rounded-md py-2 px-4 ml-2 hover:bg-amber-300" onClick={handleOnSubmitUpdateUser}>Update</button>
+            <Button
+                onClick={handleOnSubmitUpdateUser}
+                size="md"
+                color="yellow"
+            >
+                Update
+            </Button>
         </Modal>
         <Modal isOpen={isModalDeleteOpen} onClose={() => setIsModalDeleteOpen(false)}>
+            <p className="text-xl font-bold text-center">Delete User</p>
             <p className="text-lg">Yakin hapus user ({deleteUserReq.username}) ?</p>
-            <div className="flex justify-center mt-2">
-                <button className="bg-red-500 rounded-md py-2 px-4 mt-2 text-lg font-bold text-white" onClick={handleOnSubmitDeleteUser}>Delete</button>
-            </div>
+            <Button
+                onClick={handleOnSubmitDeleteUser}
+                size="md"
+                color="red"
+            >
+                Delete
+            </Button>
         </Modal>
     </>
 }

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
+import Button from "../components/Button"
 
 export default function Login() {
   const useCaseFactory = new UseCaseFactory()
@@ -60,28 +61,34 @@ export default function Login() {
           />
         </div>
         <div className="mb-2 flex items-center justify-center">
-          <button
-            className="bg-sky-700 hover:bg-sky-500 text-white font-bold py-1 px-2 rounded text-lg focus:outline-none focus:shadow-outline"
+          <Button
             onClick={onLogin}
+            size="md"
+            color="blue"
           >
             Login
-          </button>
+          </Button>
         </div>
         <div className="flex items-center justify-center">
           <p className="font-bold">Don't have an account?</p>
         </div>
         <div className="flex items-center justify-center">
-          <button
-            className="bg-green-700 hover:bg-green-500 text-white text-base font-bold py-1 px-2 rounded mx-1 focus:outline-none focus:shadow-outline"
+          <Button
             onClick={() => window.location.assign("/create-retail")}
+            size="sm"
+            color="green"
+            className="mx-1"
           >
             Create Retail
-          </button>
-          <button
-            className="bg-gray-700 hover:bg-gray-500 text-white text-base font-bold py-1 px-2 rounded mx-1 focus:outline-none focus:shadow-outline"
+          </Button>
+          <Button
+            onClick={() => { }}
+            size="sm"
+            color="gray"
+            className="mx-1"
           >
             Create Supplier
-          </button>
+          </Button>
         </div>
       </div>
     </div>
