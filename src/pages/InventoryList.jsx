@@ -26,8 +26,9 @@ export default function InventoryList() {
         unit: "",
         price: ""
     })
-    const [deleteUserReq, setDeleteUserReq] = useState({
-        username: ""
+    const [deleteInventoryReq, setDeleteInventoryReq] = useState({
+        id: "",
+        item_name: ""
     })
 
     useEffect(() => {
@@ -80,15 +81,16 @@ export default function InventoryList() {
             })
     }
 
-    const handleOnSubmitDeleteUser = () => {
-        useCaseFactory.deleteUser().execute(deleteUserReq)
+    const handleDeleteInventory = () => {
+        useCaseFactory.deleteInventory().execute(deleteInventoryReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
                         console.log(response.error_schema.error_message)
                         setIsModalDeleteOpen(false)
-                        setDeleteUserReq({
-                            username: ""
+                        setDeleteInventoryReq({
+                            id: "",
+                            item_name: ""
                         })
                         getInventoryList()
                     }
@@ -199,8 +201,9 @@ export default function InventoryList() {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setDeleteUserReq({
-                                        username: data.username
+                                    setDeleteInventoryReq({
+                                        id: data.id,
+                                        item_name: data.item_name
                                     })
                                     setIsModalDeleteOpen(true)
                                 }}
@@ -264,9 +267,9 @@ export default function InventoryList() {
             onClose={() => setIsModalDeleteOpen(false)}
             title="Delete User"
         >
-            <p className="text-lg">Yakin hapus user ({deleteUserReq.username}) ?</p>
+            <p className="text-lg">Yakin hapus item ({deleteInventoryReq.item_name}) ?</p>
             <Button
-                onClick={handleOnSubmitDeleteUser}
+                onClick={handleDeleteInventory}
                 size="md"
                 color="red"
             >
