@@ -76,6 +76,12 @@ export class GetUserListUseCase {
     }
 }
 
+export class CreateRetailUseCase {
+    execute(createRetailReq) {
+        return new UserService().createRetail(createRetailReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -88,4 +94,5 @@ export class UseCaseFactory {
     deleteUser() { return new DeleteUserUseCase() }
     changePassword() { return new ChangePasswordUseCase() }
     getUserList() { return new GetUserListUseCase() }
+    createRetail() { return new CreateRetailUseCase() }
 }

@@ -88,4 +88,17 @@ export class UserService {
                 })
             )
     }
+
+    createRetail(createRetailReq) {
+        return from(axios.post(this.endpoint + "/create-retail", createRetailReq, this.baseConfig.noJwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    alert(error.response.data.error_schema.error_message)
+                    return of(error.response.data)
+                })
+            )
+    }
 }
