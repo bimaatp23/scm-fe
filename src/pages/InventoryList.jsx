@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
+import { setNotification } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
@@ -51,7 +52,10 @@ export default function InventoryList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setIsModalAddOpen(false)
                         setCreateInventoryReq({
                             item_name: "",
@@ -68,7 +72,10 @@ export default function InventoryList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setIsModalUpdateOpen(false)
                         setUpdateInventoryReq({
                             name: "",
@@ -86,7 +93,10 @@ export default function InventoryList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setIsModalDeleteOpen(false)
                         setDeleteInventoryReq({
                             id: "",

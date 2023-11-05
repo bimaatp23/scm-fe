@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
+import { setNotification } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
@@ -47,7 +48,10 @@ export default function UserList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setIsModalAddOpen(false)
                         setCreateUserReq({
                             name: "",
@@ -65,7 +69,10 @@ export default function UserList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        useCaseFactory.notification().set({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setIsModalUpdateOpen(false)
                         setUpdateUserReq({
                             name: "",
@@ -83,7 +90,10 @@ export default function UserList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        useCaseFactory.notification().set({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setIsModalDeleteOpen(false)
                         setDeleteUserReq({
                             username: ""

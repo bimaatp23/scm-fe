@@ -1,6 +1,7 @@
 import moment from "moment/moment"
 import React, { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
+import { setNotification } from "../Utils"
 import Button from "./Button"
 import Input from "./Input"
 import Modal from "./Modal"
@@ -24,12 +25,15 @@ export default function ClientWrapper(props) {
         return () => clearInterval(interval)
     }, [])
 
-    const handleOnSubmitChangePassword = () => {
+    const handleChangePassword = () => {
         useCaseFactory.changePassword().execute(changePasswordReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        console.log(response.error_schema.error_message)
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
                         setChangePasswordReq({
                             old_password: "",
                             new_password: "",
@@ -38,8 +42,15 @@ export default function ClientWrapper(props) {
                         setIsModalChangePasswordOpen(false)
                         doLogout()
                     }
+                    console.log(response)
                 }
             })
+    }
+
+    const handleOnEnter = (e) => {
+        if (e.key == "Enter") {
+            handleChangePassword()
+        }
     }
 
     const doLogout = () => {
@@ -71,6 +82,7 @@ export default function ClientWrapper(props) {
                     ...changePasswordReq,
                     old_password: e.target.value
                 })}
+                onKeyDown={handleOnEnter}
             />
             <Input
                 type="password"
@@ -80,6 +92,7 @@ export default function ClientWrapper(props) {
                     ...changePasswordReq,
                     new_password: e.target.value
                 })}
+                onKeyDown={handleOnEnter}
             />
             <Input
                 type="password"
@@ -89,9 +102,10 @@ export default function ClientWrapper(props) {
                     ...changePasswordReq,
                     renew_password: e.target.value
                 })}
+                onKeyDown={handleOnEnter}
             />
             <Button
-                onClick={handleOnSubmitChangePassword}
+                onClick={handleChangePassword}
                 size="md"
                 color="yellow"
             >

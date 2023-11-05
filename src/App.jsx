@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import "sweetalert2/dist/sweetalert2.min.css"
 import "./App.css"
 import { Middleware as Auth } from "./Middleware"
 import CreateRetail from "./pages/CreateRetail.jsx"

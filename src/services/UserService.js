@@ -2,6 +2,7 @@ import axios from "axios"
 import { from, map, of } from "rxjs"
 import { catchError } from "rxjs/operators"
 import { SessionUseCase } from "../UseCaseFactory"
+import { setNotification } from "../Utils"
 import { BaseConfig } from "./BaseConfig"
 
 export class UserService {
@@ -18,7 +19,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
@@ -31,7 +35,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
@@ -44,7 +51,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
@@ -57,7 +67,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
@@ -70,7 +83,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
@@ -83,7 +99,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
@@ -96,7 +115,10 @@ export class UserService {
                     return response.data
                 }),
                 catchError((error) => {
-                    alert(error.response.data.error_schema.error_message)
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
                     return of(error.response.data)
                 })
             )
