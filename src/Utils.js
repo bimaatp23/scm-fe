@@ -11,5 +11,5 @@ export function setNotification(props) {
 }
 
 export function toRupiah(number) {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number)
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(number).slice(0, -3)
 }
