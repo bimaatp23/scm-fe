@@ -2,6 +2,7 @@ import { useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import Button from "../components/Button"
 import Input from "../components/Input"
+import { setNotification } from "../Utils"
 
 export default function CreateRetail() {
   const useCaseFactory = new UseCaseFactory()
@@ -29,6 +30,10 @@ export default function CreateRetail() {
       .subscribe({
         next: (response) => {
           if (response.error_schema.error_code === 200) {
+            setNotification({
+              icon: "success",
+              message: response.error_schema.error_message
+            })
             window.location.assign("/login")
           }
         }

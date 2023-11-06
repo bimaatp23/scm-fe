@@ -26,6 +26,12 @@ export default function Sidebar(props) {
                         </>
                         : <></>
                     }
+                    {currentSession.role === "retail" ?
+                        <>
+                            <ItemLink path="/my-order" name="My Order" />
+                        </>
+                        : <></>
+                    }
                 </ul>
             </div>
             <div>
