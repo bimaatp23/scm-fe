@@ -1,4 +1,5 @@
 import { InventoryService } from "./services/InventoryService"
+import { OrderService } from "./services/OrderService"
 import { UserService } from "./services/UserService"
 
 // Time Use Case
@@ -108,6 +109,14 @@ export class DeleteInventoryUseCase {
     }
 }
 
+// Order Use Case
+
+export class CreateOrderUseCase {
+    execute(createOrderReq) {
+        return new OrderService().create(createOrderReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -126,4 +135,6 @@ export class UseCaseFactory {
     createInventory() { return new CreateInventoryUseCase() }
     updateInventory() { return new UpdateInventoryUseCase() }
     deleteInventory() { return new DeleteInventoryUseCase() }
+    // Order Use Case
+    createOrder() { return new CreateOrderUseCase() }
 }
