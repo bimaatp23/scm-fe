@@ -17,12 +17,19 @@ export default function Sidebar(props) {
                         <>
                             <ItemLink path="/user-list" name="User List" />
                             <ItemLink path="/inventory-list" name="Inventory List" />
+                            <ItemLink path="/order-list" name="Order List" />
                         </>
                         : <></>
                     }
                     {currentSession.role === "gudang" ?
                         <>
                             <ItemLink path="/inventory-list" name="Inventory List" />
+                        </>
+                        : <></>
+                    }
+                    {currentSession.role === "distribusi" ?
+                        <>
+                            <ItemLink path="/order-list" name="Order List" />
                         </>
                         : <></>
                     }

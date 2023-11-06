@@ -55,7 +55,7 @@ export default function MyOrder() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        setOrderList(response.output_schema.filter((element) => element.user_retail == currentSession.username))
+                        setOrderList(response.output_schema.filter((data) => data.user_retail == currentSession.username))
                     }
                 }
             })

@@ -110,7 +110,7 @@ export default function InventoryList() {
 
     return <>
         <TitlePage>Inventory List</TitlePage>
-        {currentSession.role == "admin" ?
+        {currentSession.role == "gudang" ?
             <>
                 <Button
                     onClick={() => setIsModalAddOpen(true)}
@@ -178,7 +178,7 @@ export default function InventoryList() {
                 <TableCell>Unit</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Stock</TableCell>
-                {currentSession.role == "admin" ?
+                {currentSession.role == "gudang" ?
                     <TableCell>Action</TableCell>
                     : <></>}
             </TableRowHead>
@@ -190,7 +190,7 @@ export default function InventoryList() {
                     <TableCell>{data.unit}</TableCell>
                     <TableCell>{data.price}</TableCell>
                     <TableCell>{data.stock}</TableCell>
-                    {currentSession.role == "admin" ?
+                    {currentSession.role == "gudang" ?
                         <TableCell>
                             <Button
                                 onClick={() => {

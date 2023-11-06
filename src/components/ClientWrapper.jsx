@@ -42,7 +42,6 @@ export default function ClientWrapper(props) {
                         setIsModalChangePasswordOpen(false)
                         doLogout()
                     }
-                    console.log(response)
                 }
             })
     }
