@@ -28,6 +28,22 @@ export class UserService {
             )
     }
 
+    getList() {
+        return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
+
     create(createUserReq) {
         return from(axios.post(this.endpoint + "/create", createUserReq, this.baseConfig.jwtConfig))
             .pipe(
@@ -78,22 +94,6 @@ export class UserService {
 
     changePassword(deleteUserReq) {
         return from(axios.post(this.endpoint + "/change-password", deleteUserReq, this.baseConfig.jwtConfig))
-            .pipe(
-                map((response) => {
-                    return response.data
-                }),
-                catchError((error) => {
-                    setNotification({
-                        icon: "error",
-                        message: error.response.data.error_schema.error_message
-                    })
-                    return of(error.response.data)
-                })
-            )
-    }
-
-    getList() {
-        return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data

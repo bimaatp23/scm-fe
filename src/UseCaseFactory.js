@@ -48,6 +48,12 @@ export class LoginUseCase {
     }
 }
 
+export class GetUserListUseCase {
+    execute() {
+        return new UserService().getList()
+    }
+}
+
 export class CreateUserUseCase {
     execute(createUserReq) {
         return new UserService().create(createUserReq)
@@ -69,12 +75,6 @@ export class DeleteUserUseCase {
 export class ChangePasswordUseCase {
     execute(changePasswordReq) {
         return new UserService().changePassword(changePasswordReq)
-    }
-}
-
-export class GetUserListUseCase {
-    execute() {
-        return new UserService().getList()
     }
 }
 
@@ -111,6 +111,12 @@ export class DeleteInventoryUseCase {
 
 // Order Use Case
 
+export class GetOrderListUseCase {
+    execute() {
+        return new OrderService().getList()
+    }
+}
+
 export class CreateOrderUseCase {
     execute(createOrderReq) {
         return new OrderService().create(createOrderReq)
@@ -124,11 +130,11 @@ export class UseCaseFactory {
     currentSession() { return new SessionUseCase() }
     // User Use Case
     login() { return new LoginUseCase() }
+    getUserList() { return new GetUserListUseCase() }
     createUser() { return new CreateUserUseCase() }
     updateUser() { return new UpdateUserUseCase() }
     deleteUser() { return new DeleteUserUseCase() }
     changePassword() { return new ChangePasswordUseCase() }
-    getUserList() { return new GetUserListUseCase() }
     createRetail() { return new CreateRetailUseCase() }
     // Inventory Use Case
     getInventoryList() { return new GetInventoryListUseCase() }
@@ -136,5 +142,6 @@ export class UseCaseFactory {
     updateInventory() { return new UpdateInventoryUseCase() }
     deleteInventory() { return new DeleteInventoryUseCase() }
     // Order Use Case
+    getOrderList() { return new GetOrderListUseCase() }
     createOrder() { return new CreateOrderUseCase() }
 }

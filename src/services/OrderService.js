@@ -13,6 +13,22 @@ export class OrderService {
 
     endpoint = process.env.REACT_APP_ENDPOINT + "/order"
 
+    getList() {
+        return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
+
     create(createOrderReq) {
         return from(axios.post(this.endpoint + "/create", {
             order_id: this.timeUseCase.get().getTime(),
