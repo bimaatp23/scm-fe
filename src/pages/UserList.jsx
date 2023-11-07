@@ -69,7 +69,7 @@ export default function UserList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        useCaseFactory.notification().set({
+                        setNotification({
                             icon: "success",
                             message: response.error_schema.error_message
                         })
@@ -90,7 +90,7 @@ export default function UserList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        useCaseFactory.notification().set({
+                        setNotification({
                             icon: "success",
                             message: response.error_schema.error_message
                         })

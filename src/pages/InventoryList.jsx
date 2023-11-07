@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
-import { setNotification } from "../Utils"
+import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
@@ -188,7 +188,7 @@ export default function InventoryList() {
                     <TableCell>{data.item_name}</TableCell>
                     <TableCell>{data.description}</TableCell>
                     <TableCell>{data.unit}</TableCell>
-                    <TableCell>{data.price}</TableCell>
+                    <TableCell>{toRupiah(parseInt(data.price))}</TableCell>
                     <TableCell>{data.stock}</TableCell>
                     {currentSession.role == "gudang" ?
                         <TableCell>
