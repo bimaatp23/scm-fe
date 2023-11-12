@@ -9,7 +9,7 @@ export class TimeUseCase {
     get() {
         const customDate = ""
         const currentDate = new Date()
-        if (customDate != "") {
+        if (customDate !== "") {
             currentDate.setFullYear(customDate.split("-")[0])
             currentDate.setMonth(customDate.split("-")[1] - 1)
             currentDate.setDate(customDate.split("-")[2])
@@ -91,6 +91,12 @@ export class GetInventoryListUseCase {
     }
 }
 
+export class GetInventoryItemListUseCase {
+    execute() {
+        return new InventoryService().getItemList()
+    }
+}
+
 export class CreateInventoryUseCase {
     execute(createInventoryReq) {
         return new InventoryService().create(createInventoryReq)
@@ -138,6 +144,7 @@ export class UseCaseFactory {
     createRetail() { return new CreateRetailUseCase() }
     // Inventory Use Case
     getInventoryList() { return new GetInventoryListUseCase() }
+    getInventoryItemList() { return new GetInventoryItemListUseCase() }
     createInventory() { return new CreateInventoryUseCase() }
     updateInventory() { return new UpdateInventoryUseCase() }
     deleteInventory() { return new DeleteInventoryUseCase() }

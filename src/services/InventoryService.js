@@ -12,7 +12,23 @@ export class InventoryService {
     endpoint = process.env.REACT_APP_ENDPOINT + "/inventory"
 
     getList() {
-        return from(axios.get(this.endpoint + "/stock", this.baseConfig.jwtConfig))
+        return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
+
+    getItemList() {
+        return from(axios.get(this.endpoint + "/item-list", this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
