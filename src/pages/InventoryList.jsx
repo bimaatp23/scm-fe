@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
@@ -8,7 +8,7 @@ import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
 export default function InventoryList() {
-    const useCaseFactory = new UseCaseFactory()
+    const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const currentSession = useCaseFactory.currentSession().get()
     const [inventoryList, setInventoryList] = useState([])
     const [inventoryItemList, setInventoryItemList] = useState([])
@@ -35,10 +35,29 @@ export default function InventoryList() {
         item_name: ""
     })
 
+    const [isStatic, setIsStatic] = useState(false)
+    useEffect(() => setIsStatic(true), [])
+
     useEffect(() => {
-        getInventoryList()
-        getInventoryItemList()
-    }, ["static"])
+        if (isStatic) {
+            useCaseFactory.getInventoryList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setInventoryList(response.output_schema)
+                        }
+                    }
+                })
+            useCaseFactory.getInventoryItemList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setInventoryItemList(response.output_schema)
+                        }
+                    }
+                })
+        }
+    }, [isStatic, useCaseFactory])
 
     const getInventoryList = () => {
         useCaseFactory.getInventoryList().execute()
@@ -46,17 +65,6 @@ export default function InventoryList() {
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
                         setInventoryList(response.output_schema)
-                    }
-                }
-            })
-    }
-
-    const getInventoryItemList = () => {
-        useCaseFactory.getInventoryItemList().execute()
-            .subscribe({
-                next: (response) => {
-                    if (response.error_schema.error_code === 200) {
-                        setInventoryItemList(response.output_schema)
                     }
                 }
             })

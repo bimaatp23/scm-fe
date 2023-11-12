@@ -1,5 +1,5 @@
 import { Document, PDFDownloadLink, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
@@ -8,7 +8,7 @@ import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
 export default function OrderList() {
-    const useCaseFactory = new UseCaseFactory()
+    const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const currentSession = useCaseFactory.currentSession().get()
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
     const [isNeedAction, setIsNeedAction] = useState(false)
@@ -91,9 +91,21 @@ export default function OrderList() {
         },
     })
 
+    const [isStatic, setIsStatic] = useState(false)
+    useEffect(() => setIsStatic(true), [])
+
     useEffect(() => {
-        getOrderList()
-    }, ["static"])
+        if (isStatic) {
+            useCaseFactory.getOrderList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setOrderList(response.output_schema)
+                        }
+                    }
+                })
+        }
+    }, [isStatic, useCaseFactory])
 
     const getOrderList = () => {
         useCaseFactory.getOrderList().execute()
@@ -267,13 +279,9 @@ export default function OrderList() {
                                 setRejectOrderReq({
                                     order_id: data.id
                                 })
-                                orderList.map((data2) => {
-                                    if (data2.id === data.id) {
-                                        setDetailOrderList({
-                                            total: parseInt(data2.total),
-                                            data: data2.items
-                                        })
-                                    }
+                                setDetailOrderList({
+                                    total: parseInt(data.total),
+                                    data: data.items
                                 })
                             }}
                             size="md"

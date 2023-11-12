@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
+import Input from "../components/Input"
 import Modal from "../components/Modal"
 import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
-import Input from "../components/Input"
 
 export default function MyOrder() {
-    const useCaseFactory = new UseCaseFactory()
+    const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const currentSession = useCaseFactory.currentSession().get()
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
@@ -22,40 +22,48 @@ export default function MyOrder() {
         data: []
     })
 
-    useEffect(() => {
-        getInventoryList()
-        getOrderList()
-    }, ["static"])
+    const [isStatic, setIsStatic] = useState(false)
+    useEffect(() => setIsStatic(true), [])
 
-    const getInventoryList = () => {
-        useCaseFactory.getInventoryList().execute()
-            .subscribe({
-                next: (response) => {
-                    if (response.error_schema.error_code === 200) {
-                        setCreateOrderReq({
-                            total: 0,
-                            data: response.output_schema.map((data) => {
-                                return {
-                                    inventory_id: data.id,
-                                    item_name: data.item_name,
-                                    description: data.description,
-                                    unit: data.unit,
-                                    price: parseInt(data.price),
-                                    quantity: 0
-                                }
+    useEffect(() => {
+        if (isStatic) {
+            useCaseFactory.getInventoryList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setCreateOrderReq({
+                                total: 0,
+                                data: response.output_schema.map((data) => {
+                                    return {
+                                        inventory_id: data.id,
+                                        item_name: data.item_name,
+                                        description: data.description,
+                                        unit: data.unit,
+                                        price: parseInt(data.price),
+                                        quantity: 0
+                                    }
+                                })
                             })
-                        })
+                        }
                     }
-                }
-            })
-    }
+                })
+            useCaseFactory.getOrderList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setOrderList(response.output_schema.filter((data) => data.user_retail === currentSession.username))
+                        }
+                    }
+                })
+        }
+    }, [isStatic, useCaseFactory, currentSession])
 
     const getOrderList = () => {
         useCaseFactory.getOrderList().execute()
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        setOrderList(response.output_schema.filter((data) => data.user_retail == currentSession.username))
+                        setOrderList(response.output_schema.filter((data) => data.user_retail === currentSession.username))
                     }
                 }
             })
@@ -88,18 +96,6 @@ export default function MyOrder() {
                     }
                 }
             })
-    }
-
-    const handleShowDetail = (orderId) => {
-        setIsModalDetailOpen(true)
-        orderList.map((data) => {
-            if (data.id == orderId) {
-                setDetailOrderList({
-                    total: parseInt(data.total),
-                    data: data.items
-                })
-            }
-        })
     }
 
     return <>
@@ -188,7 +184,13 @@ export default function MyOrder() {
                     <TableCell>{data.reject_date ?? data.submit_date}</TableCell>
                     <TableCell>
                         <Button
-                            onClick={() => handleShowDetail(data.id)}
+                            onClick={() => {
+                                setIsModalDetailOpen(true)
+                                setDetailOrderList({
+                                    total: parseInt(data.total),
+                                    data: data.items
+                                })
+                            }}
                             size="md"
                             color="yellow"
                         >
