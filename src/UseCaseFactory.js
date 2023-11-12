@@ -129,6 +129,12 @@ export class CreateOrderUseCase {
     }
 }
 
+export class RejectOrderUseCase {
+    execute(rejectOrderReq) {
+        return new OrderService().reject(rejectOrderReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -151,4 +157,5 @@ export class UseCaseFactory {
     // Order Use Case
     getOrderList() { return new GetOrderListUseCase() }
     createOrder() { return new CreateOrderUseCase() }
+    rejectOrder() { return new RejectOrderUseCase() }
 }

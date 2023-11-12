@@ -34,8 +34,27 @@ export class OrderService {
             order_id: this.timeUseCase.get().getTime(),
             user_retail: this.sessionUseCase.get().username,
             total: createOrderReq.total,
-            submitted_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
+            submit_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
             data: JSON.stringify(createOrderReq.data.filter((data) => data.quantity > 0))
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
+
+    reject(rejectOrderReq) {
+        return from(axios.post(this.endpoint + "/reject", {
+            order_id: rejectOrderReq.order_id,
+            reject_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
         }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
