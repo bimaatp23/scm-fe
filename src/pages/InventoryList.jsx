@@ -219,6 +219,7 @@ export default function InventoryList() {
                             <>
                                 <Button
                                     onClick={() => {
+                                        setIsModalUpdateOpen(true)
                                         setUpdateInventoryReq({
                                             id: data.id,
                                             item_name: data.item_name,
@@ -226,7 +227,6 @@ export default function InventoryList() {
                                             unit: data.unit,
                                             price: data.price
                                         })
-                                        setIsModalUpdateOpen(true)
                                     }}
                                     size="md"
                                     color="yellow"

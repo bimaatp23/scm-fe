@@ -1,7 +1,7 @@
 import { Document, PDFDownloadLink, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 import { useEffect, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
-import { toRupiah } from "../Utils"
+import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
 import Modal from "../components/Modal"
 import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
@@ -9,11 +9,16 @@ import TitlePage from "../components/TitlePage"
 
 export default function OrderList() {
     const useCaseFactory = new UseCaseFactory()
+    const currentSession = useCaseFactory.currentSession().get()
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
+    const [isNeedAction, setIsNeedAction] = useState(false)
     const [orderList, setOrderList] = useState([])
     const [detailOrderList, setDetailOrderList] = useState({
         total: 0,
         data: []
+    })
+    const [rejectOrderReq, setRejectOrderReq] = useState({
+        order_id: ""
     })
 
     const styles = StyleSheet.create({
@@ -101,21 +106,28 @@ export default function OrderList() {
             })
     }
 
-    const handleShowDetail = (orderId) => {
-        setIsModalDetailOpen(true)
-        orderList.map((data) => {
-            if (data.id == orderId) {
-                setDetailOrderList({
-                    total: parseInt(data.total),
-                    data: data.items
-                })
-            }
-        })
+    const handleRejectOrder = () => {
+        useCaseFactory.rejectOrder().execute(rejectOrderReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        setRejectOrderReq({
+                            order_id: ""
+                        })
+                        getOrderList()
+                    }
+                }
+            })
     }
 
     const PODocument = (props) => {
         const { orderId } = props
-        const result = orderList.filter((data) => data.id == orderId)
+        const result = orderList.filter((data) => data.id === orderId)
 
         return <Document>
             <Page size={"A4"} style={styles.page}>
@@ -235,7 +247,7 @@ export default function OrderList() {
                 <TableCell>#</TableCell>
                 <TableCell>Total</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Submitted Date</TableCell>
+                <TableCell>Update Date</TableCell>
                 <TableCell>Ordered By</TableCell>
                 <TableCell>Action</TableCell>
                 <TableCell>Download</TableCell>
@@ -245,11 +257,25 @@ export default function OrderList() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.submitted_date}</TableCell>
+                    <TableCell>{data.reject_date ?? data.submit_date}</TableCell>
                     <TableCell>{data.user_retail}</TableCell>
                     <TableCell>
                         <Button
-                            onClick={() => handleShowDetail(data.id)}
+                            onClick={() => {
+                                setIsModalDetailOpen(true)
+                                setIsNeedAction(data.status === "Submitted")
+                                setRejectOrderReq({
+                                    order_id: data.id
+                                })
+                                orderList.map((data2) => {
+                                    if (data2.id === data.id) {
+                                        setDetailOrderList({
+                                            total: parseInt(data2.total),
+                                            data: data2.items
+                                        })
+                                    }
+                                })
+                            }}
                             size="md"
                             color="yellow"
                         >
@@ -257,14 +283,15 @@ export default function OrderList() {
                         </Button>
                     </TableCell>
                     <TableCell>
-                        <PDFDownloadLink document={<PODocument orderId={data.id} />} fileName={`PO-${data.id}.pdf`}>
-                            {({ blob, url, loading, error }) => <Button
-                                size="md"
-                                color="yellow"
-                            >
-                                PO
-                            </Button>}
-                        </PDFDownloadLink>
+                        {data.status === "Submitted" ?
+                            <PDFDownloadLink document={<PODocument orderId={data.id} />} fileName={`PO-${data.id}.pdf`}>
+                                {({ blob, url, loading, error }) => <Button
+                                    size="md"
+                                    color="yellow"
+                                >
+                                    PO
+                                </Button>}
+                            </PDFDownloadLink> : <></>}
                     </TableCell>
                 </TableRow>
             })}
@@ -305,6 +332,24 @@ export default function OrderList() {
                     <TableCell>{toRupiah(detailOrderList.total)}</TableCell>
                 </TableRow>
             </Table>
+            {currentSession.role === "distribusi" && isNeedAction ?
+                <div
+                    className="flex justify-center gap-2"
+                >
+                    <Button
+                        onClick={handleRejectOrder}
+                        size="md"
+                        color="red"
+                    >
+                        Reject
+                    </Button>
+                    <Button
+                        size="md"
+                        color="gray"
+                    >
+                        Accept
+                    </Button>
+                </div> : <></>}
         </Modal>
     </>
 }

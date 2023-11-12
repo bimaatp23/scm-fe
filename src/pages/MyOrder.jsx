@@ -177,7 +177,7 @@ export default function MyOrder() {
                 <TableCell>#</TableCell>
                 <TableCell>Total</TableCell>
                 <TableCell>Status</TableCell>
-                <TableCell>Submitted Date</TableCell>
+                <TableCell>Update Date</TableCell>
                 <TableCell>Action</TableCell>
             </TableRowHead>
             {orderList.map((data, index) => {
@@ -185,7 +185,7 @@ export default function MyOrder() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.submitted_date}</TableCell>
+                    <TableCell>{data.reject_date ?? data.submit_date}</TableCell>
                     <TableCell>
                         <Button
                             onClick={() => handleShowDetail(data.id)}
