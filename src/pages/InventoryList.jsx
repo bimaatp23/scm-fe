@@ -11,7 +11,10 @@ export default function InventoryList() {
     const useCaseFactory = new UseCaseFactory()
     const currentSession = useCaseFactory.currentSession().get()
     const [inventoryList, setInventoryList] = useState([])
+    const [inventoryItemList, setInventoryItemList] = useState([])
+    const [selectedInventoryItemList, setSelectedInventoryItemList] = useState([])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+    const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
     const [createInventoryReq, setCreateInventoryReq] = useState({
@@ -34,6 +37,7 @@ export default function InventoryList() {
 
     useEffect(() => {
         getInventoryList()
+        getInventoryItemList()
     }, ["static"])
 
     const getInventoryList = () => {
@@ -42,6 +46,17 @@ export default function InventoryList() {
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
                         setInventoryList(response.output_schema)
+                    }
+                }
+            })
+    }
+
+    const getInventoryItemList = () => {
+        useCaseFactory.getInventoryItemList().execute()
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setInventoryItemList(response.output_schema)
                     }
                 }
             })
@@ -110,7 +125,7 @@ export default function InventoryList() {
 
     return <>
         <TitlePage>Inventory List</TitlePage>
-        {currentSession.role == "gudang" ?
+        {currentSession.role === "gudang" ?
             <>
                 <Button
                     onClick={() => setIsModalAddOpen(true)}
@@ -178,9 +193,7 @@ export default function InventoryList() {
                 <TableCell>Unit</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Stock</TableCell>
-                {currentSession.role == "gudang" ?
-                    <TableCell>Action</TableCell>
-                    : <></>}
+                <TableCell>Action</TableCell>
             </TableRowHead>
             {inventoryList.map((data, index) => {
                 return <TableRow key={index}>
@@ -190,43 +203,76 @@ export default function InventoryList() {
                     <TableCell>{data.unit}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.price))}</TableCell>
                     <TableCell>{data.stock}</TableCell>
-                    {currentSession.role == "gudang" ?
-                        <TableCell>
-                            <Button
-                                onClick={() => {
-                                    setUpdateInventoryReq({
-                                        id: data.id,
-                                        item_name: data.item_name,
-                                        description: data.description,
-                                        unit: data.unit,
-                                        price: data.price
-                                    })
-                                    setIsModalUpdateOpen(true)
-                                }}
-                                size="md"
-                                color="yellow"
-                                className="mx-1"
-                            >
-                                Edit
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    setDeleteInventoryReq({
-                                        id: data.id,
-                                        item_name: data.item_name
-                                    })
-                                    setIsModalDeleteOpen(true)
-                                }}
-                                size="md"
-                                color="red"
-                                className="mx-1"
-                            >
-                                Delete
-                            </Button>
-                        </TableCell> : <></>}
+                    <TableCell>
+                        <Button
+                            onClick={() => {
+                                setSelectedInventoryItemList(inventoryItemList.filter((data2) => data2.inventory_id === data.id))
+                                setIsModalDetailOpen(true)
+                            }}
+                            size="md"
+                            color="yellow"
+                            className="mx-1"
+                        >
+                            Detail
+                        </Button>
+                        {currentSession.role === "gudang" ?
+                            <>
+                                <Button
+                                    onClick={() => {
+                                        setUpdateInventoryReq({
+                                            id: data.id,
+                                            item_name: data.item_name,
+                                            description: data.description,
+                                            unit: data.unit,
+                                            price: data.price
+                                        })
+                                        setIsModalUpdateOpen(true)
+                                    }}
+                                    size="md"
+                                    color="yellow"
+                                    className="mx-1"
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setDeleteInventoryReq({
+                                            id: data.id,
+                                            item_name: data.item_name
+                                        })
+                                        setIsModalDeleteOpen(true)
+                                    }}
+                                    size="md"
+                                    color="red"
+                                    className="mx-1"
+                                >
+                                    Delete
+                                </Button>
+                            </> : <></>}
+                    </TableCell>
                 </TableRow>
             })}
         </Table>
+        <Modal
+            isOpen={isModalDetailOpen}
+            onClose={() => setIsModalDetailOpen(false)}
+            title="Detail Inventory"
+        >
+            <Table>
+                <TableRowHead>
+                    <TableCell>#</TableCell>
+                    <TableCell>Quantity</TableCell>
+                    <TableCell>Status</TableCell>
+                </TableRowHead>
+                {selectedInventoryItemList.map((data, index) => {
+                    return <TableRow>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{data.quantity}</TableCell>
+                        <TableCell>{data.status}</TableCell>
+                    </TableRow>
+                })}
+            </Table>
+        </Modal>
         <Modal
             isOpen={isModalUpdateOpen}
             onClose={() => setIsModalUpdateOpen(false)}
