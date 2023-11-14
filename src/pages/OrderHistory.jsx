@@ -9,6 +9,7 @@ import TitlePage from "../components/TitlePage"
 
 export default function OrderHistory() {
     const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
+    const currentSession = useMemo(() => useCaseFactory.currentSession().get(), [useCaseFactory])
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
     const [orderList, setOrderList] = useState([])
     const [detailOrderList, setDetailOrderList] = useState({
@@ -24,13 +25,21 @@ export default function OrderHistory() {
             useCaseFactory.getOrderList().execute()
                 .subscribe({
                     next: (response) => {
+                        const allowedStatus = [
+                            BasicConstant.ORDER_STATUS_CANCELLED,
+                            BasicConstant.ORDER_STATUS_REJECTED
+                        ]
                         if (response.error_schema.error_code === 200) {
-                            setOrderList(response.output_schema.filter((data) => data.status === BasicConstant.ORDER_STATUS_REJECTED))
+                            if (currentSession.role === BasicConstant.ROLE_RETAIL) {
+                                setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status) && data.user_retail === currentSession.username))
+                            } else {
+                                setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status)))
+                            }
                         }
                     }
                 })
         }
-    }, [isStatic, useCaseFactory])
+    }, [isStatic, useCaseFactory, currentSession])
 
     return <>
         <TitlePage>Order History</TitlePage>
@@ -40,7 +49,9 @@ export default function OrderHistory() {
                 <TableCell>Total</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Update Date</TableCell>
-                <TableCell>Ordered By</TableCell>
+                {currentSession.role !== BasicConstant.ROLE_RETAIL ?
+                    <TableCell>Order By</TableCell>
+                    : <></>}
                 <TableCell>Action</TableCell>
             </TableRowHead>
             {orderList.map((data, index) => {
@@ -49,7 +60,9 @@ export default function OrderHistory() {
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
                     <TableCell>{data.reject_date ?? data.submit_date}</TableCell>
-                    <TableCell>{data.user_retail}</TableCell>
+                    {currentSession.role !== BasicConstant.ROLE_RETAIL ?
+                        <TableCell>{data.user_retail}</TableCell>
+                        : <></>}
                     <TableCell>
                         <Button
                             onClick={() => {

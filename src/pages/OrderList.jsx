@@ -12,12 +12,12 @@ export default function OrderList() {
     const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const currentSession = useCaseFactory.currentSession().get()
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
-    const [isNeedAction, setIsNeedAction] = useState(false)
     const [orderList, setOrderList] = useState([])
     const [detailOrderList, setDetailOrderList] = useState({
         total: 0,
         data: []
     })
+    const [currentStatus, setCurrentStatus] = useState("")
     const [rejectOrderReq, setRejectOrderReq] = useState({
         order_id: ""
     })
@@ -101,7 +101,10 @@ export default function OrderList() {
                 .subscribe({
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
-                            setOrderList(response.output_schema.filter((data) => data.status !== BasicConstant.ORDER_STATUS_REJECTED))
+                            const allowedStatus = [
+                                BasicConstant.ORDER_STATUS_SUBMITTED
+                            ]
+                            setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status)))
                         }
                     }
                 })
@@ -113,7 +116,10 @@ export default function OrderList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        setOrderList(response.output_schema.filter((data) => data.status !== BasicConstant.ORDER_STATUS_REJECTED))
+                        const allowedStatus = [
+                            BasicConstant.ORDER_STATUS_SUBMITTED
+                        ]
+                        setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status)))
                     }
                 }
             })
@@ -261,7 +267,7 @@ export default function OrderList() {
                 <TableCell>Total</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Update Date</TableCell>
-                <TableCell>Ordered By</TableCell>
+                <TableCell>Order By</TableCell>
                 <TableCell>Action</TableCell>
                 <TableCell>Download</TableCell>
             </TableRowHead>
@@ -270,19 +276,19 @@ export default function OrderList() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.reject_date ?? data.submit_date}</TableCell>
+                    <TableCell>{data.reject_date ?? data.cancel_date ?? data.submit_date}</TableCell>
                     <TableCell>{data.user_retail}</TableCell>
                     <TableCell>
                         <Button
                             onClick={() => {
                                 setIsModalDetailOpen(true)
-                                setIsNeedAction(data.status === BasicConstant.ORDER_STATUS_SUBMITTED)
-                                setRejectOrderReq({
-                                    order_id: data.id
-                                })
                                 setDetailOrderList({
                                     total: parseInt(data.total),
                                     data: data.items
+                                })
+                                setCurrentStatus(data.status)
+                                setRejectOrderReq({
+                                    order_id: data.id
                                 })
                             }}
                             size="md"
@@ -341,7 +347,7 @@ export default function OrderList() {
                     <TableCell>{toRupiah(detailOrderList.total)}</TableCell>
                 </TableRow>
             </Table>
-            {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && isNeedAction ?
+            {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
                 <div
                     className="flex justify-center gap-2"
                 >

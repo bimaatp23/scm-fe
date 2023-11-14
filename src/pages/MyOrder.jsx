@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
@@ -9,7 +10,7 @@ import TitlePage from "../components/TitlePage"
 
 export default function MyOrder() {
     const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
-    const currentSession = useCaseFactory.currentSession().get()
+    const currentSession = useMemo(() => useCaseFactory.currentSession().get(), [useCaseFactory])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
     const [orderList, setOrderList] = useState([])
@@ -20,6 +21,10 @@ export default function MyOrder() {
     const [detailOrderList, setDetailOrderList] = useState({
         total: 0,
         data: []
+    })
+    const [currentStatus, setCurrentStatus] = useState("")
+    const [cancelOrderReq, setCancelOrderReq] = useState({
+        order_id: ""
     })
 
     const [isStatic, setIsStatic] = useState(false)
@@ -51,7 +56,10 @@ export default function MyOrder() {
                 .subscribe({
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
-                            setOrderList(response.output_schema.filter((data) => data.user_retail === currentSession.username))
+                            const allowedStatus = [
+                                BasicConstant.ORDER_STATUS_SUBMITTED
+                            ]
+                            setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status) && data.user_retail === currentSession.username))
                         }
                     }
                 })
@@ -63,7 +71,10 @@ export default function MyOrder() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        setOrderList(response.output_schema.filter((data) => data.user_retail === currentSession.username))
+                        const allowedStatus = [
+                            BasicConstant.ORDER_STATUS_SUBMITTED
+                        ]
+                        setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status) && data.user_retail === currentSession.username))
                     }
                 }
             })
@@ -91,6 +102,25 @@ export default function MyOrder() {
                                     quantity: 0
                                 }
                             })
+                        })
+                        getOrderList()
+                    }
+                }
+            })
+    }
+
+    const handleCancelOrder = () => {
+        useCaseFactory.cancelOrder().execute(cancelOrderReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        setCancelOrderReq({
+                            order_id: ""
                         })
                         getOrderList()
                     }
@@ -181,7 +211,7 @@ export default function MyOrder() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.reject_date ?? data.submit_date}</TableCell>
+                    <TableCell>{data.reject_date ?? data.cancel_date ?? data.submit_date}</TableCell>
                     <TableCell>
                         <Button
                             onClick={() => {
@@ -189,6 +219,10 @@ export default function MyOrder() {
                                 setDetailOrderList({
                                     total: parseInt(data.total),
                                     data: data.items
+                                })
+                                setCurrentStatus(data.status)
+                                setCancelOrderReq({
+                                    order_id: data.id
                                 })
                             }}
                             size="md"
@@ -236,6 +270,18 @@ export default function MyOrder() {
                     <TableCell>{toRupiah(detailOrderList.total)}</TableCell>
                 </TableRow>
             </Table>
+            {currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                <div
+                    className="flex justify-center gap-2"
+                >
+                    <Button
+                        onClick={handleCancelOrder}
+                        size="md"
+                        color="red"
+                    >
+                        Cancel
+                    </Button>
+                </div> : <></>}
         </Modal>
     </>
 }
