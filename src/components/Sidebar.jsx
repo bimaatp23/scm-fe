@@ -18,6 +18,7 @@ export default function Sidebar(props) {
                             <ItemLink path="/user-list" name="User List" />
                             <ItemLink path="/inventory-list" name="Inventory List" />
                             <ItemLink path="/order-list" name="Order List" />
+                            <ItemLink path="/order-history" name="Order History" />
                         </>
                         : <></>
                     }
@@ -30,6 +31,7 @@ export default function Sidebar(props) {
                     {currentSession.role === "distribusi" ?
                         <>
                             <ItemLink path="/order-list" name="Order List" />
+                            <ItemLink path="/order-history" name="Order History" />
                         </>
                         : <></>
                     }

@@ -100,7 +100,7 @@ export default function OrderList() {
                 .subscribe({
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
-                            setOrderList(response.output_schema)
+                            setOrderList(response.output_schema.filter((data) => data.status !== "Rejected"))
                         }
                     }
                 })
@@ -112,7 +112,7 @@ export default function OrderList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        setOrderList(response.output_schema)
+                        setOrderList(response.output_schema.filter((data) => data.status !== "Rejected"))
                     }
                 }
             })

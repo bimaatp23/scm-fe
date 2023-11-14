@@ -273,7 +273,7 @@ export default function InventoryList() {
                     <TableCell>Status</TableCell>
                 </TableRowHead>
                 {selectedInventoryItemList.map((data, index) => {
-                    return <TableRow>
+                    return <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{data.quantity}</TableCell>
                         <TableCell>{data.status}</TableCell>
