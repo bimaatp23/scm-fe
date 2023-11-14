@@ -51,6 +51,25 @@ export class OrderService {
             )
     }
 
+    cancel(cancelOrderReq) {
+        return from(axios.post(this.endpoint + "/cancel", {
+            order_id: cancelOrderReq.order_id,
+            cancel_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
+
     reject(rejectOrderReq) {
         return from(axios.post(this.endpoint + "/reject", {
             order_id: rejectOrderReq.order_id,

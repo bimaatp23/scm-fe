@@ -129,6 +129,12 @@ export class CreateOrderUseCase {
     }
 }
 
+export class CancelOrderUseCase {
+    execute(cancelOrderReq) {
+        return new OrderService().cancel(cancelOrderReq)
+    }
+}
+
 export class RejectOrderUseCase {
     execute(rejectOrderReq) {
         return new OrderService().reject(rejectOrderReq)
@@ -157,5 +163,6 @@ export class UseCaseFactory {
     // Order Use Case
     getOrderList() { return new GetOrderListUseCase() }
     createOrder() { return new CreateOrderUseCase() }
+    cancelOrder() { return new CancelOrderUseCase() }
     rejectOrder() { return new RejectOrderUseCase() }
 }
