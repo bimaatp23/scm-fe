@@ -6,7 +6,6 @@ import CreateRetail from "./pages/CreateRetail.jsx"
 import Dashboard from "./pages/Dashboard.jsx"
 import InventoryList from "./pages/InventoryList.jsx"
 import Login from "./pages/Login.jsx"
-import MyOrder from "./pages/MyOrder.jsx"
 import OrderHistory from "./pages/OrderHistory.jsx"
 import OrderList from "./pages/OrderList.jsx"
 import UserList from "./pages/UserList"
@@ -25,7 +24,6 @@ function App() {
           <Route path="/inventory-list" element={<Auth isLogin={true}><InventoryList /></Auth>} />
           <Route path="/order-list" element={<Auth isLogin={true}><OrderList /></Auth>} />
           <Route path="/order-history" element={<Auth isLogin={true}><OrderHistory /></Auth>} />
-          <Route path="/my-order" element={<Auth isLogin={true}><MyOrder /></Auth>} />
         </Routes>
       </BrowserRouter>
     </div>

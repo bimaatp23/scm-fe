@@ -38,8 +38,8 @@ export default function Sidebar(props) {
                     }
                     {currentSession.role === BasicConstant.ROLE_RETAIL ?
                         <>
-                            <ItemLink path="/my-order" name="My Order" />
-                            <ItemLink path="/order-history" name="Order History" />
+                            <ItemLink path="/order-list" name="My Order" />
+                            <ItemLink path="/order-history" name="My Order History" />
                         </>
                         : <></>
                     }
