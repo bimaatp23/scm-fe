@@ -141,6 +141,12 @@ export class RejectOrderUseCase {
     }
 }
 
+export class ProcessOrderUseCase {
+    execute(processOrderReq) {
+        return new OrderService().process(processOrderReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -165,4 +171,5 @@ export class UseCaseFactory {
     createOrder() { return new CreateOrderUseCase() }
     cancelOrder() { return new CancelOrderUseCase() }
     rejectOrder() { return new RejectOrderUseCase() }
+    processOrder() { return new ProcessOrderUseCase() }
 }

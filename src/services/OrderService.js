@@ -88,4 +88,23 @@ export class OrderService {
                 })
             )
     }
+
+    process(processOrderReq) {
+        return from(axios.post(this.endpoint + "/process", {
+            order_id: processOrderReq.order_id,
+            process_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
 }
