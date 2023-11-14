@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
@@ -133,7 +134,7 @@ export default function InventoryList() {
 
     return <>
         <TitlePage>Inventory List</TitlePage>
-        {currentSession.role === "gudang" ?
+        {currentSession.role === BasicConstant.ROLE_GUDANG ?
             <>
                 <Button
                     onClick={() => setIsModalAddOpen(true)}
@@ -223,7 +224,7 @@ export default function InventoryList() {
                         >
                             Detail
                         </Button>
-                        {currentSession.role === "gudang" ?
+                        {currentSession.role === BasicConstant.ROLE_GUDANG ?
                             <>
                                 <Button
                                     onClick={() => {
@@ -270,12 +271,14 @@ export default function InventoryList() {
                 <TableRowHead>
                     <TableCell>#</TableCell>
                     <TableCell>Quantity</TableCell>
+                    <TableCell>Description</TableCell>
                     <TableCell>Status</TableCell>
                 </TableRowHead>
                 {selectedInventoryItemList.map((data, index) => {
                     return <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{data.quantity}</TableCell>
+                        <TableCell>{data.description}</TableCell>
                         <TableCell>{data.status}</TableCell>
                     </TableRow>
                 })}

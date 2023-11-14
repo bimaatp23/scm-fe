@@ -1,3 +1,4 @@
+import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 
 export default function Sidebar(props) {
@@ -13,7 +14,7 @@ export default function Sidebar(props) {
                 </div>
                 <ul>
                     <ItemLink path="/" name="Dashboard" />
-                    {currentSession.role === "admin" ?
+                    {currentSession.role === BasicConstant.ROLE_ADMIN ?
                         <>
                             <ItemLink path="/user-list" name="User List" />
                             <ItemLink path="/inventory-list" name="Inventory List" />
@@ -22,20 +23,20 @@ export default function Sidebar(props) {
                         </>
                         : <></>
                     }
-                    {currentSession.role === "gudang" ?
+                    {currentSession.role === BasicConstant.ROLE_GUDANG ?
                         <>
                             <ItemLink path="/inventory-list" name="Inventory List" />
                         </>
                         : <></>
                     }
-                    {currentSession.role === "distribusi" ?
+                    {currentSession.role === BasicConstant.ROLE_DISTRIBUSI ?
                         <>
                             <ItemLink path="/order-list" name="Order List" />
                             <ItemLink path="/order-history" name="Order History" />
                         </>
                         : <></>
                     }
-                    {currentSession.role === "retail" ?
+                    {currentSession.role === BasicConstant.ROLE_RETAIL ?
                         <>
                             <ItemLink path="/my-order" name="My Order" />
                         </>

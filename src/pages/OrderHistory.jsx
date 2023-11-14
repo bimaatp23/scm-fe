@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { toRupiah } from "../Utils"
 import Button from "../components/Button"
@@ -24,7 +25,7 @@ export default function OrderHistory() {
                 .subscribe({
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
-                            setOrderList(response.output_schema.filter((data) => data.status === "Rejected"))
+                            setOrderList(response.output_schema.filter((data) => data.status === BasicConstant.ORDER_STATUS_REJECTED))
                         }
                     }
                 })

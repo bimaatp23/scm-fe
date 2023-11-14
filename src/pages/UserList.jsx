@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification } from "../Utils"
 import Button from "../components/Button"
@@ -9,7 +10,7 @@ import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
 export default function UserList() {
-    const useCaseFactory = new UseCaseFactory()
+    const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const [userList, setUserList] = useState([])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
@@ -28,9 +29,21 @@ export default function UserList() {
         username: ""
     })
 
+    const [isStatic, setIsStatic] = useState(false)
+    useEffect(() => setIsStatic(true), [])
+
     useEffect(() => {
-        getUserList()
-    }, ["static"])
+        if (isStatic) {
+            useCaseFactory.getUserList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setUserList(response.output_schema)
+                        }
+                    }
+                })
+        }
+    }, [isStatic, useCaseFactory])
 
     const getUserList = () => {
         useCaseFactory.getUserList().execute()
@@ -145,10 +158,10 @@ export default function UserList() {
                 })}
             >
                 <SelectOption value="">Role</SelectOption>
-                <SelectOption value="pengadaan">Pengadaan</SelectOption>
-                <SelectOption value="gudang">Gudang</SelectOption>
-                <SelectOption value="produksi">Produksi</SelectOption>
-                <SelectOption value="distribusi">Distribusi</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_GUDANG}>Gudang</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_GUDANG}>Pengadaan</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Produksi</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Distribusi</SelectOption>
             </Select>
             <Button
                 onClick={handleAddUser}
@@ -227,10 +240,10 @@ export default function UserList() {
                 })}
             >
                 <SelectOption value="">Role</SelectOption>
-                <SelectOption value="pengadaan">Pengadaan</SelectOption>
-                <SelectOption value="gudang">Gudang</SelectOption>
-                <SelectOption value="produksi">Produksi</SelectOption>
-                <SelectOption value="distribusi">Distribusi</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_GUDANG}>Gudang</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_GUDANG}>Pengadaan</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Produksi</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Distribusi</SelectOption>
             </Select>
             <Button
                 onClick={handleUpdateUser}

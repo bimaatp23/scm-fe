@@ -1,5 +1,6 @@
 import { Document, PDFDownloadLink, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 import { useEffect, useMemo, useState } from "react"
+import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
@@ -100,7 +101,7 @@ export default function OrderList() {
                 .subscribe({
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
-                            setOrderList(response.output_schema.filter((data) => data.status !== "Rejected"))
+                            setOrderList(response.output_schema.filter((data) => data.status !== BasicConstant.ORDER_STATUS_REJECTED))
                         }
                     }
                 })
@@ -112,7 +113,7 @@ export default function OrderList() {
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
-                        setOrderList(response.output_schema.filter((data) => data.status !== "Rejected"))
+                        setOrderList(response.output_schema.filter((data) => data.status !== BasicConstant.ORDER_STATUS_REJECTED))
                     }
                 }
             })
@@ -275,7 +276,7 @@ export default function OrderList() {
                         <Button
                             onClick={() => {
                                 setIsModalDetailOpen(true)
-                                setIsNeedAction(data.status === "Submitted")
+                                setIsNeedAction(data.status === BasicConstant.ORDER_STATUS_SUBMITTED)
                                 setRejectOrderReq({
                                     order_id: data.id
                                 })
@@ -291,7 +292,7 @@ export default function OrderList() {
                         </Button>
                     </TableCell>
                     <TableCell>
-                        {data.status === "Submitted" ?
+                        {data.status === BasicConstant.ORDER_STATUS_SUBMITTED ?
                             <PDFDownloadLink document={<PODocument orderId={data.id} />} fileName={`PO-${data.id}.pdf`}>
                                 {({ blob, url, loading, error }) => <Button
                                     size="md"
@@ -340,7 +341,7 @@ export default function OrderList() {
                     <TableCell>{toRupiah(detailOrderList.total)}</TableCell>
                 </TableRow>
             </Table>
-            {currentSession.role === "distribusi" && isNeedAction ?
+            {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && isNeedAction ?
                 <div
                     className="flex justify-center gap-2"
                 >
