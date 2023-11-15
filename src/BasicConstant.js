@@ -16,4 +16,5 @@ export default class BasicConstant {
     static ORDER_STATUS_PROCESS = "Process"
     static ORDER_STATUS_DELIVERY = "Delivery"
     static ORDER_STATUS_ARRIVAL = "Arrival"
+    static ORDER_STATUS_DONE = "Done"
 }

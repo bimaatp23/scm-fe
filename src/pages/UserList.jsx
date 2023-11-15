@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
-import { setNotification } from "../Utils"
+import { setConfirm, setNotification } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
@@ -14,7 +14,6 @@ export default function UserList() {
     const [userList, setUserList] = useState([])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
     const [createUserReq, setCreateUserReq] = useState({
         name: "",
         username: "",
@@ -56,7 +55,13 @@ export default function UserList() {
             })
     }
 
-    const handleAddUser = () => {
+    const validateCreateUserReq = () => {
+        return !(createUserReq.name === "" ||
+            createUserReq.role === "" ||
+            createUserReq.username === "")
+    }
+
+    const handleCreateUser = () => {
         useCaseFactory.createUser().execute(createUserReq)
             .subscribe({
                 next: (response) => {
@@ -77,6 +82,12 @@ export default function UserList() {
             })
     }
 
+    const validateUpdateUserReq = () => {
+        return !(updateUserReq.name === "" ||
+            updateUserReq.role === "" ||
+            updateUserReq.username === "")
+    }
+
     const handleUpdateUser = () => {
         useCaseFactory.updateUser().execute(updateUserReq)
             .subscribe({
@@ -87,11 +98,6 @@ export default function UserList() {
                             message: response.error_schema.error_message
                         })
                         setIsModalUpdateOpen(false)
-                        setUpdateUserReq({
-                            name: "",
-                            username: "",
-                            role: ""
-                        })
                         getUserList()
                     }
                 }
@@ -106,10 +112,6 @@ export default function UserList() {
                         setNotification({
                             icon: "success",
                             message: response.error_schema.error_message
-                        })
-                        setIsModalDeleteOpen(false)
-                        setDeleteUserReq({
-                            username: ""
                         })
                         getUserList()
                     }
@@ -164,7 +166,7 @@ export default function UserList() {
                 <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Distribusi</SelectOption>
             </Select>
             <Button
-                onClick={handleAddUser}
+                onClick={() => validateCreateUserReq() ? setConfirm({ message: "Are you sure to create this user?", next: handleCreateUser }) : {}}
                 size="md"
                 color="blue"
             >
@@ -206,7 +208,7 @@ export default function UserList() {
                                 setDeleteUserReq({
                                     username: data.username
                                 })
-                                setIsModalDeleteOpen(true)
+                                setConfirm({ message: "Are you sure to delete this user?", next: handleDeleteUser })
                             }}
                             size="md"
                             color="red"
@@ -246,25 +248,11 @@ export default function UserList() {
                 <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Distribusi</SelectOption>
             </Select>
             <Button
-                onClick={handleUpdateUser}
+                onClick={() => validateUpdateUserReq() ? setConfirm({ message: "Are you sure to update this user?", next: handleUpdateUser }) : {}}
                 size="md"
                 color="yellow"
             >
                 Update
-            </Button>
-        </Modal>
-        <Modal
-            isOpen={isModalDeleteOpen}
-            onClose={() => setIsModalDeleteOpen(false)}
-            title="Delete User"
-        >
-            <p className="text-lg">Yakin hapus user ({deleteUserReq.username}) ?</p>
-            <Button
-                onClick={handleDeleteUser}
-                size="md"
-                color="red"
-            >
-                Delete
             </Button>
         </Modal>
     </>

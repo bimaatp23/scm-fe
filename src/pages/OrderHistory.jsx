@@ -27,13 +27,18 @@ export default function OrderHistory() {
                     next: (response) => {
                         const allowedStatus = [
                             BasicConstant.ORDER_STATUS_CANCELLED,
-                            BasicConstant.ORDER_STATUS_REJECTED
+                            BasicConstant.ORDER_STATUS_REJECTED,
+                            BasicConstant.ORDER_STATUS_DONE
+                        ]
+                        const allowedStatus2 = [
+                            BasicConstant.ORDER_STATUS_REJECTED,
+                            BasicConstant.ORDER_STATUS_DONE
                         ]
                         if (response.error_schema.error_code === 200) {
                             if (currentSession.role === BasicConstant.ROLE_RETAIL) {
-                                setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status) && data.user_retail === currentSession.username))
+                                setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
                             } else {
-                                setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status)))
+                                setOrderList(response.output_schema.filter((data) => allowedStatus2.includes(data.status)))
                             }
                         }
                     }
@@ -42,7 +47,7 @@ export default function OrderHistory() {
     }, [isStatic, useCaseFactory, currentSession])
 
     return <>
-        <TitlePage>Order History</TitlePage>
+        <TitlePage>{currentSession.role === BasicConstant.ROLE_RETAIL ? "My Order History" : "Order History"}</TitlePage>
         <Table>
             <TableRowHead>
                 <TableCell>#</TableCell>

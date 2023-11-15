@@ -2,24 +2,24 @@ export default function Button(props) {
     const { children, onClick, color, size, className } = props
 
     let classSize = ""
-    if (size == "sm") {
+    if (size === "sm") {
         classSize = "text-sm py-1 px-2"
-    } else if (size == "md") {
+    } else if (size === "md") {
         classSize = "text-md py-2 px-4"
-    } else if (size == "lg") {
+    } else if (size === "lg") {
         classSize = "text-xl py-3 px-6"
     }
 
     let classColor = ""
-    if (color == "red") {
+    if (color === "red") {
         classColor = "bg-red-500 hover:bg-red-400"
-    } else if (color == "green") {
+    } else if (color === "green") {
         classColor = "bg-green-600 hover:bg-green-500"
-    } else if (color == "blue") {
+    } else if (color === "blue") {
         classColor = "bg-sky-600 hover:bg-sky-500"
-    } else if (color == "yellow") {
+    } else if (color === "yellow") {
         classColor = "bg-amber-400 hover:bg-amber-300"
-    } else if (color == "gray") {
+    } else if (color === "gray") {
         classColor = "bg-gray-400 hover:bg-gray-300"
     }
 

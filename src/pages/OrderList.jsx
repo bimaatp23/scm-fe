@@ -2,7 +2,7 @@ import { Document, PDFDownloadLink, Page, StyleSheet, Text, View } from "@react-
 import { useEffect, useMemo, useState } from "react"
 import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
-import { setNotification, toRupiah } from "../Utils"
+import { setConfirm, setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
@@ -140,9 +140,9 @@ export default function OrderList() {
                                 BasicConstant.ORDER_STATUS_PROCESS
                             ]
                             if (currentSession.role === BasicConstant.ROLE_RETAIL) {
-                                setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status) && data.user_retail === currentSession.username))
+                                setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
                             } else {
-                                setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status)))
+                                setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status)))
                             }
                         }
                     }
@@ -160,9 +160,9 @@ export default function OrderList() {
                             BasicConstant.ORDER_STATUS_PROCESS
                         ]
                         if (currentSession.role === BasicConstant.ROLE_RETAIL) {
-                            setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status) && data.user_retail === currentSession.username))
+                            setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
                         } else {
-                            setOrderList(response.output_schema.filter((data) => allowedStatus.some(status => status === data.status)))
+                            setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status)))
                         }
                     }
                 }
@@ -426,7 +426,7 @@ export default function OrderList() {
                         </TableRow>
                     </Table>
                     <Button
-                        onClick={() => createOrderReq.total > 0 ? handleCreateOrder() : setIsModalAddOpen(false)}
+                        onClick={() => createOrderReq.total > 0 ? setConfirm({ message: "Are you sure to create this order?", next: handleCreateOrder }) : {}}
                         size="md"
                         color="blue"
                     >
@@ -535,35 +535,35 @@ export default function OrderList() {
                     <TableCell>{toRupiah(detailOrderList.total)}</TableCell>
                 </TableRow>
             </Table>
+            {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                <div
+                    className="flex justify-center gap-2"
+                >
+                    <Button
+                        onClick={() => setConfirm({ message: "Are you sure to cancel this order?", next: handleCancelOrder })}
+                        size="md"
+                        color="red"
+                    >
+                        Cancel
+                    </Button>
+                </div> : <></>}
             {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
                 <div
                     className="flex justify-center gap-2"
                 >
                     <Button
-                        onClick={handleRejectOrder}
+                        onClick={() => setConfirm({ message: "Are you sure to reject this order?", next: handleRejectOrder })}
                         size="md"
                         color="red"
                     >
                         Reject
                     </Button>
                     <Button
-                        onClick={handleProcessOrder}
+                        onClick={() => setConfirm({ message: "Are you sure to process this order?", next: handleProcessOrder })}
                         size="md"
                         color="green"
                     >
                         Process
-                    </Button>
-                </div> : <></>}
-            {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
-                <div
-                    className="flex justify-center gap-2"
-                >
-                    <Button
-                        onClick={handleCancelOrder}
-                        size="md"
-                        color="red"
-                    >
-                        Cancel
                     </Button>
                 </div> : <></>}
         </Modal>

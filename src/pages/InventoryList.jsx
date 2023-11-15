@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
-import { setNotification, toRupiah } from "../Utils"
+import { setConfirm, setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
@@ -17,7 +17,6 @@ export default function InventoryList() {
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
     const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false)
-    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
     const [createInventoryReq, setCreateInventoryReq] = useState({
         item_name: "",
         description: "",
@@ -71,7 +70,14 @@ export default function InventoryList() {
             })
     }
 
-    const handleAddInventory = () => {
+    const validateCreateInventoryReq = () => {
+        return !(createInventoryReq.description === "" ||
+            createInventoryReq.item_name === "" ||
+            createInventoryReq.price === "" ||
+            createInventoryReq.unit === "")
+    }
+
+    const handleCreateInventoryReq = () => {
         useCaseFactory.createInventory().execute(createInventoryReq)
             .subscribe({
                 next: (response) => {
@@ -82,13 +88,23 @@ export default function InventoryList() {
                         })
                         setIsModalAddOpen(false)
                         setCreateInventoryReq({
+                            description: "",
                             item_name: "",
+                            price: "",
                             unit: ""
                         })
                         getInventoryList()
                     }
                 }
             })
+    }
+
+    const validateUpdateInventoryReq = () => {
+        return !(updateInventoryReq.description === "" ||
+            updateInventoryReq.id === "" ||
+            updateInventoryReq.item_name === "" ||
+            updateInventoryReq.price === "" ||
+            updateInventoryReq.unit === "")
     }
 
     const handleUpdateInventory = () => {
@@ -101,11 +117,6 @@ export default function InventoryList() {
                             message: response.error_schema.error_message
                         })
                         setIsModalUpdateOpen(false)
-                        setUpdateInventoryReq({
-                            name: "",
-                            username: "",
-                            role: ""
-                        })
                         getInventoryList()
                     }
                 }
@@ -120,11 +131,6 @@ export default function InventoryList() {
                         setNotification({
                             icon: "success",
                             message: response.error_schema.error_message
-                        })
-                        setIsModalDeleteOpen(false)
-                        setDeleteInventoryReq({
-                            id: "",
-                            item_name: ""
                         })
                         getInventoryList()
                     }
@@ -186,7 +192,7 @@ export default function InventoryList() {
                         })}
                     />
                     <Button
-                        onClick={handleAddInventory}
+                        onClick={() => validateCreateInventoryReq() ? setConfirm({ message: "Are you sure to create this inventory?", next: handleCreateInventoryReq }) : {}}
                         size="md"
                         color="blue"
                     >
@@ -249,7 +255,7 @@ export default function InventoryList() {
                                             id: data.id,
                                             item_name: data.item_name
                                         })
-                                        setIsModalDeleteOpen(true)
+                                        setConfirm({ message: "Are you sure to delete this inventory?", next: handleDeleteInventory })
                                     }}
                                     size="md"
                                     color="red"
@@ -293,6 +299,7 @@ export default function InventoryList() {
                 type="text"
                 placeholder="Item Name"
                 value={updateInventoryReq.item_name}
+                readOnly={true}
             />
             <Input
                 type="text"
@@ -322,25 +329,11 @@ export default function InventoryList() {
                 })}
             />
             <Button
-                onClick={handleUpdateInventory}
+                onClick={() => validateUpdateInventoryReq() ? setConfirm({ message: "Are you sure to update this inventory?", next: handleUpdateInventory }) : {}}
                 size="md"
                 color="yellow"
             >
                 Update
-            </Button>
-        </Modal>
-        <Modal
-            isOpen={isModalDeleteOpen}
-            onClose={() => setIsModalDeleteOpen(false)}
-            title="Delete User"
-        >
-            <p className="text-lg">Yakin hapus item ({deleteInventoryReq.item_name}) ?</p>
-            <Button
-                onClick={handleDeleteInventory}
-                size="md"
-                color="red"
-            >
-                Delete
             </Button>
         </Modal>
     </>
