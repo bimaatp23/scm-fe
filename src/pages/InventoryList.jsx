@@ -5,6 +5,7 @@ import { setConfirm, setNotification, toRupiah } from "../Utils"
 import Button from "../components/Button"
 import Input from "../components/Input"
 import Modal from "../components/Modal"
+import { Select, SelectOption } from "../components/Select"
 import { Table, TableCell, TableRow, TableRowHead } from "../components/Table"
 import TitlePage from "../components/TitlePage"
 
@@ -21,6 +22,7 @@ export default function InventoryList() {
         item_name: "",
         description: "",
         unit: "",
+        tipe: "",
         price: ""
     })
     const [updateInventoryReq, setUpdateInventoryReq] = useState({
@@ -28,6 +30,7 @@ export default function InventoryList() {
         item_name: "",
         description: "",
         unit: "",
+        tipe: "",
         price: ""
     })
     const [deleteInventoryReq, setDeleteInventoryReq] = useState({
@@ -74,6 +77,7 @@ export default function InventoryList() {
         return !(createInventoryReq.description === "" ||
             createInventoryReq.item_name === "" ||
             createInventoryReq.price === "" ||
+            createInventoryReq.tipe === "" ||
             createInventoryReq.unit === "")
     }
 
@@ -104,6 +108,7 @@ export default function InventoryList() {
             updateInventoryReq.id === "" ||
             updateInventoryReq.item_name === "" ||
             updateInventoryReq.price === "" ||
+            updateInventoryReq.tipe === "" ||
             updateInventoryReq.unit === "")
     }
 
@@ -182,6 +187,17 @@ export default function InventoryList() {
                             unit: e.target.value
                         })}
                     />
+                    <Select
+                        value={createInventoryReq.tipe}
+                        onChange={(e) => setCreateInventoryReq({
+                            ...createInventoryReq,
+                            tipe: e.target.value
+                        })}
+                    >
+                        <SelectOption value="">Tipe</SelectOption>
+                        <SelectOption value={BasicConstant.INVENTORY_PRODUK}>{BasicConstant.INVENTORY_PRODUK}</SelectOption>
+                        <SelectOption value={BasicConstant.INVENTORY_BAHAN}>{BasicConstant.INVENTORY_BAHAN}</SelectOption>
+                    </Select>
                     <Input
                         type="number"
                         placeholder="Price"
@@ -206,6 +222,7 @@ export default function InventoryList() {
                 <TableCell>Item Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Unit</TableCell>
+                <TableCell>Tipe</TableCell>
                 <TableCell>Price</TableCell>
                 <TableCell>Stock</TableCell>
                 <TableCell>Action</TableCell>
@@ -216,6 +233,7 @@ export default function InventoryList() {
                     <TableCell>{data.item_name}</TableCell>
                     <TableCell>{data.description}</TableCell>
                     <TableCell>{data.unit}</TableCell>
+                    <TableCell>{data.tipe}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.price))}</TableCell>
                     <TableCell>{data.stock}</TableCell>
                     <TableCell>
@@ -240,6 +258,7 @@ export default function InventoryList() {
                                             item_name: data.item_name,
                                             description: data.description,
                                             unit: data.unit,
+                                            tipe: data.tipe,
                                             price: data.price
                                         })
                                     }}
@@ -319,6 +338,17 @@ export default function InventoryList() {
                     unit: e.target.value
                 })}
             />
+            <Select
+                value={updateInventoryReq.tipe}
+                onChange={(e) => setUpdateInventoryReq({
+                    ...updateInventoryReq,
+                    tipe: e.target.value
+                })}
+            >
+                <SelectOption value="">Tipe</SelectOption>
+                <SelectOption value={BasicConstant.INVENTORY_PRODUK}>{BasicConstant.INVENTORY_PRODUK}</SelectOption>
+                <SelectOption value={BasicConstant.INVENTORY_BAHAN}>{BasicConstant.INVENTORY_BAHAN}</SelectOption>
+            </Select>
             <Input
                 type="number"
                 placeholder="Price"

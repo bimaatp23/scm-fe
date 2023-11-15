@@ -1,5 +1,5 @@
 import moment from "moment/moment"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { UseCaseFactory } from "../UseCaseFactory"
 import { setNotification } from "../Utils"
 import Button from "./Button"
@@ -8,7 +8,7 @@ import Modal from "./Modal"
 import Sidebar from "./Sidebar"
 
 export default function ClientWrapper(props) {
-    const useCaseFactory = new UseCaseFactory()
+    const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const { children } = props
     const [currentTime, setCurrentTime] = useState(useCaseFactory.currentTime().get())
     const [isModalChangePasswordOpen, setIsModalChangePasswordOpen] = useState(false)
@@ -23,7 +23,7 @@ export default function ClientWrapper(props) {
             setCurrentTime(useCaseFactory.currentTime().get())
         }, 1000)
         return () => clearInterval(interval)
-    }, [])
+    }, [useCaseFactory])
 
     const handleChangePassword = () => {
         useCaseFactory.changePassword().execute(changePasswordReq)
@@ -47,7 +47,7 @@ export default function ClientWrapper(props) {
     }
 
     const handleOnEnter = (e) => {
-        if (e.key == "Enter") {
+        if (e.key === "Enter") {
             handleChangePassword()
         }
     }

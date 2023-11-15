@@ -1,11 +1,14 @@
 export default class BasicConstant {
-    static ROLE_ADMIN = "admin"
-    static ROLE_GUDANG = "gudang"
-    static ROLE_PENGADAAN = "pengadaan"
-    static ROLE_PRODUKSI = "produksi"
-    static ROLE_DISTRIBUSI = "distribusi"
-    static ROLE_SUPPLIER = "supplier"
-    static ROLE_RETAIL = "retail"
+    static ROLE_ADMIN = "Admin"
+    static ROLE_GUDANG = "Gudang"
+    static ROLE_PENGADAAN = "Pengadaan"
+    static ROLE_PRODUKSI = "Produksi"
+    static ROLE_DISTRIBUSI = "Distribusi"
+    static ROLE_SUPPLIER = "Supplier"
+    static ROLE_RETAIL = "Retail"
+
+    static INVENTORY_PRODUK = "Produk"
+    static INVENTORY_BAHAN = "Bahan"
 
     static ITEM_MASUK = "Masuk"
     static ITEM_KELUAR = "Keluar"

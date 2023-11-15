@@ -160,10 +160,10 @@ export default function UserList() {
                 })}
             >
                 <SelectOption value="">Role</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_GUDANG}>Gudang</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_GUDANG}>Pengadaan</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Produksi</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Distribusi</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_GUDANG}>{BasicConstant.ROLE_GUDANG}</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PENGADAAN}>{BasicConstant.ROLE_PENGADAAN}</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>{BasicConstant.ROLE_PRODUKSI}</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_DISTRIBUSI}>{BasicConstant.ROLE_DISTRIBUSI}</SelectOption>
             </Select>
             <Button
                 onClick={() => validateCreateUserReq() ? setConfirm({ message: "Are you sure to create this user?", next: handleCreateUser }) : {}}
@@ -242,10 +242,10 @@ export default function UserList() {
                 })}
             >
                 <SelectOption value="">Role</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_GUDANG}>Gudang</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_GUDANG}>Pengadaan</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Produksi</SelectOption>
-                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>Distribusi</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_GUDANG}>{BasicConstant.ROLE_GUDANG}</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PENGADAAN}>{BasicConstant.ROLE_PENGADAAN}</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_PRODUKSI}>{BasicConstant.ROLE_PRODUKSI}</SelectOption>
+                <SelectOption value={BasicConstant.ROLE_DISTRIBUSI}>{BasicConstant.ROLE_DISTRIBUSI}</SelectOption>
             </Select>
             <Button
                 onClick={() => validateUpdateUserReq() ? setConfirm({ message: "Are you sure to update this user?", next: handleUpdateUser }) : {}}

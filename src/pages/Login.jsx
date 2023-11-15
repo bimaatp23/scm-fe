@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   const handleOnEnter = (e) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       onLogin(e)
     }
   }
