@@ -64,7 +64,7 @@ export default function OrderHistory() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.reject_date ?? data.cancel_date}</TableCell>
+                    <TableCell>{data.done_date ?? data.reject_date ?? data.cancel_date}</TableCell>
                     {currentSession.role !== BasicConstant.ROLE_RETAIL ?
                         <TableCell>{data.user_retail}</TableCell>
                         : <></>}

@@ -42,6 +42,9 @@ export default function OrderList() {
     const [arrivalOrderReq, setArrivalOrderReq] = useState({
         order_id: ""
     })
+    const [doneOrderReq, setDoneOrderReq] = useState({
+        order_id: ""
+    })
 
     const styles = StyleSheet.create({
         page: {
@@ -88,10 +91,10 @@ export default function OrderList() {
             justifyContent: "center",
             paddingLeft: 2,
             paddingRight: 2,
-            fontSize: 12,
+            fontSize: 12
         },
         table1: {
-            width: "5%",
+            width: "5%"
         },
         table2: {
             width: "25%"
@@ -110,7 +113,7 @@ export default function OrderList() {
         },
         table7: {
             width: "18%"
-        },
+        }
     })
 
     const [isStatic, setIsStatic] = useState(false)
@@ -288,6 +291,22 @@ export default function OrderList() {
 
     const handleArrivalOrder = () => {
         useCaseFactory.arrivalOrder().execute(arrivalOrderReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        getOrderList()
+                    }
+                }
+            })
+    }
+
+    const handleDoneOrder = () => {
+        useCaseFactory.doneOrder().execute(doneOrderReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
@@ -554,6 +573,9 @@ export default function OrderList() {
                                 setArrivalOrderReq({
                                     order_id: data.id
                                 })
+                                setDoneOrderReq({
+                                    order_id: data.id
+                                })
                             }}
                             size="md"
                             color="yellow"
@@ -649,6 +671,14 @@ export default function OrderList() {
                         color="green"
                     >
                         Arrival
+                    </Button> : <></>}
+                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_ARRIVAL ?
+                    <Button
+                        onClick={() => setConfirm({ message: "Are you sure to done this order?", next: handleDoneOrder })}
+                        size="md"
+                        color="green"
+                    >
+                        Done
                     </Button> : <></>}
             </div>
         </Modal>
