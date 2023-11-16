@@ -127,4 +127,23 @@ export class OrderService {
                 })
             )
     }
+
+    arrival(arrivalOrderReq) {
+        return from(axios.post(this.endpoint + "/arrival", {
+            order_id: arrivalOrderReq.order_id,
+            arrival_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
 }

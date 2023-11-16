@@ -153,6 +153,12 @@ export class DeliveryOrderUseCase {
     }
 }
 
+export class ArrivalOrderUseCase {
+    execute(arrivalOrderReq) {
+        return new OrderService().arrival(arrivalOrderReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -179,4 +185,5 @@ export class UseCaseFactory {
     rejectOrder() { return new RejectOrderUseCase() }
     processOrder() { return new ProcessOrderUseCase() }
     deliveryOrder() { return new DeliveryOrderUseCase() }
+    arrivalOrder() { return new ArrivalOrderUseCase() }
 }
