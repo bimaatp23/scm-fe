@@ -36,6 +36,9 @@ export default function OrderList() {
         order_id: "",
         data: []
     })
+    const [deliveryOrderReq, setDeliveryOrderReq] = useState({
+        order_id: ""
+    })
 
     const styles = StyleSheet.create({
         page: {
@@ -139,7 +142,8 @@ export default function OrderList() {
                         if (response.error_schema.error_code === 200) {
                             const allowedStatus = [
                                 BasicConstant.ORDER_STATUS_SUBMITTED,
-                                BasicConstant.ORDER_STATUS_PROCESS
+                                BasicConstant.ORDER_STATUS_PROCESS,
+                                BasicConstant.ORDER_STATUS_DELIVERY
                             ]
                             if (currentSession.role === BasicConstant.ROLE_RETAIL) {
                                 setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
@@ -170,7 +174,8 @@ export default function OrderList() {
                     if (response.error_schema.error_code === 200) {
                         const allowedStatus = [
                             BasicConstant.ORDER_STATUS_SUBMITTED,
-                            BasicConstant.ORDER_STATUS_PROCESS
+                            BasicConstant.ORDER_STATUS_PROCESS,
+                            BasicConstant.ORDER_STATUS_DELIVERY
                         ]
                         if (currentSession.role === BasicConstant.ROLE_RETAIL) {
                             setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
@@ -254,6 +259,22 @@ export default function OrderList() {
                         })
                         setIsModalDetailOpen(false)
                         getStockList()
+                        getOrderList()
+                    }
+                }
+            })
+    }
+
+    const handleDeliveryOrder = () => {
+        useCaseFactory.deliveryOrder().execute(deliveryOrderReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
                         getOrderList()
                     }
                 }
@@ -468,7 +489,7 @@ export default function OrderList() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.process_date ?? data.submit_date}</TableCell>
+                    <TableCell>{data.delivery_date ?? data.process_date ?? data.submit_date}</TableCell>
                     {currentSession.role !== BasicConstant.ROLE_RETAIL ?
                         <>
                             <TableCell>{data.user_retail}</TableCell>
@@ -511,6 +532,9 @@ export default function OrderList() {
                                     is_valid: !(newDetailData.some((data) => data.is_valid === false)),
                                     order_id: data.id,
                                     data: newDetailData
+                                })
+                                setDeliveryOrderReq({
+                                    order_id: data.id
                                 })
                             }}
                             size="md"
@@ -564,37 +588,43 @@ export default function OrderList() {
                     <TableCell>{toRupiah(detailOrderList.total)}</TableCell>
                 </TableRow>
             </Table>
-            {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
-                <div
-                    className="flex justify-center gap-2"
-                >
+            <div
+                className="flex justify-center gap-2"
+            >
+                {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
                     <Button
                         onClick={() => setConfirm({ message: "Are you sure to cancel this order?", next: handleCancelOrder })}
                         size="md"
                         color="red"
                     >
                         Cancel
-                    </Button>
-                </div> : <></>}
-            {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
-                <div
-                    className="flex justify-center gap-2"
-                >
+                    </Button> : <></>}
+                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                    <>
+                        <Button
+                            onClick={() => setConfirm({ message: "Are you sure to reject this order?", next: handleRejectOrder })}
+                            size="md"
+                            color="red"
+                        >
+                            Reject
+                        </Button>
+                        <Button
+                            onClick={() => processOrderReq.is_valid ? setConfirm({ message: "Are you sure to process this order?", next: handleProcessOrder }) : {}}
+                            size="md"
+                            color={processOrderReq.is_valid ? "green" : "gray"}
+                        >
+                            Process
+                        </Button>
+                    </> : <></>}
+                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_PROCESS ?
                     <Button
-                        onClick={() => setConfirm({ message: "Are you sure to reject this order?", next: handleRejectOrder })}
+                        onClick={() => setConfirm({ message: "Are you sure to delivery this order?", next: handleDeliveryOrder })}
                         size="md"
-                        color="red"
+                        color="green"
                     >
-                        Reject
-                    </Button>
-                    <Button
-                        onClick={() => processOrderReq.is_valid ? setConfirm({ message: "Are you sure to process this order?", next: handleProcessOrder }) : {}}
-                        size="md"
-                        color={processOrderReq.is_valid ? "green" : "gray"}
-                    >
-                        Process
-                    </Button>
-                </div> : <></>}
+                        Delivery
+                    </Button> : <></>}
+            </div>
         </Modal>
     </>
 }
