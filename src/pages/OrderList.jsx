@@ -39,6 +39,9 @@ export default function OrderList() {
     const [deliveryOrderReq, setDeliveryOrderReq] = useState({
         order_id: ""
     })
+    const [arrivalOrderReq, setArrivalOrderReq] = useState({
+        order_id: ""
+    })
 
     const styles = StyleSheet.create({
         page: {
@@ -143,7 +146,8 @@ export default function OrderList() {
                             const allowedStatus = [
                                 BasicConstant.ORDER_STATUS_SUBMITTED,
                                 BasicConstant.ORDER_STATUS_PROCESS,
-                                BasicConstant.ORDER_STATUS_DELIVERY
+                                BasicConstant.ORDER_STATUS_DELIVERY,
+                                BasicConstant.ORDER_STATUS_ARRIVAL
                             ]
                             if (currentSession.role === BasicConstant.ROLE_RETAIL) {
                                 setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
@@ -175,7 +179,8 @@ export default function OrderList() {
                         const allowedStatus = [
                             BasicConstant.ORDER_STATUS_SUBMITTED,
                             BasicConstant.ORDER_STATUS_PROCESS,
-                            BasicConstant.ORDER_STATUS_DELIVERY
+                            BasicConstant.ORDER_STATUS_DELIVERY,
+                            BasicConstant.ORDER_STATUS_ARRIVAL
                         ]
                         if (currentSession.role === BasicConstant.ROLE_RETAIL) {
                             setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
@@ -267,6 +272,22 @@ export default function OrderList() {
 
     const handleDeliveryOrder = () => {
         useCaseFactory.deliveryOrder().execute(deliveryOrderReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        getOrderList()
+                    }
+                }
+            })
+    }
+
+    const handleArrivalOrder = () => {
+        useCaseFactory.arrivalOrder().execute(arrivalOrderReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
@@ -477,11 +498,8 @@ export default function OrderList() {
                 <TableCell>Status</TableCell>
                 <TableCell>Update Date</TableCell>
                 {currentSession.role !== BasicConstant.ROLE_RETAIL ?
-                    <>
-                        <TableCell>Order By</TableCell>
-                        <TableCell>Download</TableCell>
-                    </>
-                    : <></>}
+                    <TableCell>Order By</TableCell> : <></>}
+                <TableCell>Download</TableCell>
                 <TableCell>Action</TableCell>
             </TableRowHead>
             {orderList.map((data, index) => {
@@ -489,23 +507,20 @@ export default function OrderList() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{toRupiah(parseInt(data.total))}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.delivery_date ?? data.process_date ?? data.submit_date}</TableCell>
+                    <TableCell>{data.arrival_date ?? data.delivery_date ?? data.process_date ?? data.submit_date}</TableCell>
                     {currentSession.role !== BasicConstant.ROLE_RETAIL ?
-                        <>
-                            <TableCell>{data.user_retail}</TableCell>
-                            <TableCell>
-                                {data.status === BasicConstant.ORDER_STATUS_SUBMITTED ?
-                                    <PDFDownloadLink document={<PurchaseOrderDoc orderId={data.id} />} fileName={`Purchase-Order-${data.id}.pdf`}>
-                                        {({ blob, url, loading, error }) => <Button
-                                            size="md"
-                                            color="yellow"
-                                        >
-                                            Purchase Order
-                                        </Button>}
-                                    </PDFDownloadLink> : <></>}
-                            </TableCell>
-                        </>
-                        : <></>}
+                        <TableCell>{data.user_retail}</TableCell> : <></>}
+                    <TableCell>
+                        {currentSession.role !== BasicConstant.ROLE_RETAIL && data.status === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                            <PDFDownloadLink document={<PurchaseOrderDoc orderId={data.id} />} fileName={`Purchase-Order-${data.id}.pdf`}>
+                                {({ blob, url, loading, error }) => <Button
+                                    size="md"
+                                    color="yellow"
+                                >
+                                    Purchase Order
+                                </Button>}
+                            </PDFDownloadLink> : <></>}
+                    </TableCell>
                     <TableCell>
                         <Button
                             onClick={() => {
@@ -534,6 +549,9 @@ export default function OrderList() {
                                     data: newDetailData
                                 })
                                 setDeliveryOrderReq({
+                                    order_id: data.id
+                                })
+                                setArrivalOrderReq({
                                     order_id: data.id
                                 })
                             }}
@@ -623,6 +641,14 @@ export default function OrderList() {
                         color="green"
                     >
                         Delivery
+                    </Button> : <></>}
+                {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_DELIVERY ?
+                    <Button
+                        onClick={() => setConfirm({ message: "Are you sure to arrival this order?", next: handleArrivalOrder })}
+                        size="md"
+                        color="green"
+                    >
+                        Arrival
                     </Button> : <></>}
             </div>
         </Modal>
