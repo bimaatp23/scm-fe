@@ -145,7 +145,7 @@ export default function InventoryList() {
 
     return <>
         <TitlePage>Inventory List</TitlePage>
-        {currentSession.role === BasicConstant.ROLE_GUDANG ?
+        {currentSession.role === BasicConstant.ROLE_ADMIN ?
             <>
                 <Button
                     onClick={() => setIsModalAddOpen(true)}
@@ -248,7 +248,7 @@ export default function InventoryList() {
                         >
                             Detail
                         </Button>
-                        {currentSession.role === BasicConstant.ROLE_GUDANG ?
+                        {currentSession.role === BasicConstant.ROLE_ADMIN ?
                             <>
                                 <Button
                                     onClick={() => {

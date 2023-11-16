@@ -14,6 +14,7 @@ export default function OrderList() {
     const currentSession = useMemo(() => useCaseFactory.currentSession().get(), [useCaseFactory])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
+    const [stockList, setStockList] = useState([])
     const [orderList, setOrderList] = useState([])
     const [detailOrderList, setDetailOrderList] = useState({
         total: 0,
@@ -31,7 +32,9 @@ export default function OrderList() {
         order_id: ""
     })
     const [processOrderReq, setProcessOrderReq] = useState({
-        order_id: ""
+        is_valid: true,
+        order_id: "",
+        data: []
     })
 
     const styles = StyleSheet.create({
@@ -109,28 +112,27 @@ export default function OrderList() {
 
     useEffect(() => {
         if (isStatic) {
-            if (currentSession.role === BasicConstant.ROLE_RETAIL) {
-                useCaseFactory.getInventoryList().execute()
-                    .subscribe({
-                        next: (response) => {
-                            if (response.error_schema.error_code === 200) {
-                                setCreateOrderReq({
-                                    total: 0,
-                                    data: response.output_schema.map((data) => {
-                                        return {
-                                            inventory_id: data.id,
-                                            item_name: data.item_name,
-                                            description: data.description,
-                                            unit: data.unit,
-                                            price: parseInt(data.price),
-                                            quantity: 0
-                                        }
-                                    })
+            useCaseFactory.getInventoryList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            setStockList(response.output_schema.filter((data) => data.tipe === BasicConstant.INVENTORY_PRODUK))
+                            setCreateOrderReq({
+                                total: 0,
+                                data: response.output_schema.filter((data) => data.tipe === BasicConstant.INVENTORY_PRODUK).map((data) => {
+                                    return {
+                                        inventory_id: data.id,
+                                        item_name: data.item_name,
+                                        description: data.description,
+                                        unit: data.unit,
+                                        price: parseInt(data.price),
+                                        quantity: 0
+                                    }
                                 })
-                            }
+                            })
                         }
-                    })
-            }
+                    }
+                })
             useCaseFactory.getOrderList().execute()
                 .subscribe({
                     next: (response) => {
@@ -149,6 +151,17 @@ export default function OrderList() {
                 })
         }
     }, [isStatic, useCaseFactory, currentSession])
+
+    const getStockList = () => {
+        useCaseFactory.getInventoryList().execute()
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setStockList(response.output_schema.filter((data) => data.tipe === BasicConstant.INVENTORY_PRODUK))
+                    }
+                }
+            })
+    }
 
     const getOrderList = () => {
         useCaseFactory.getOrderList().execute()
@@ -240,6 +253,7 @@ export default function OrderList() {
                             message: response.error_schema.error_message
                         })
                         setIsModalDetailOpen(false)
+                        getStockList()
                         getOrderList()
                     }
                 }
@@ -475,9 +489,16 @@ export default function OrderList() {
                         <Button
                             onClick={() => {
                                 setIsModalDetailOpen(true)
+                                const newDetailData = data.items.map((data) => {
+                                    return {
+                                        ...data,
+                                        stock: stockList.filter((data2) => data2.id === data.inventory_id)[0].stock,
+                                        is_valid: data.quantity <= stockList.filter((data2) => data2.id === data.inventory_id)[0].stock
+                                    }
+                                })
                                 setDetailOrderList({
                                     total: parseInt(data.total),
-                                    data: data.items
+                                    data: newDetailData
                                 })
                                 setCurrentStatus(data.status)
                                 setCancelOrderReq({
@@ -487,7 +508,9 @@ export default function OrderList() {
                                     order_id: data.id
                                 })
                                 setProcessOrderReq({
-                                    order_id: data.id
+                                    is_valid: !(newDetailData.some((data) => data.is_valid === false)),
+                                    order_id: data.id,
+                                    data: newDetailData
                                 })
                             }}
                             size="md"
@@ -512,22 +535,28 @@ export default function OrderList() {
                     <TableCell>Unit</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Quantity</TableCell>
+                    {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                        <TableCell>Stock</TableCell>
+                        : <></>}
                     <TableCell>Sub Total</TableCell>
                 </TableRowHead>
                 {detailOrderList.data.map((data, index) => {
-                    return <TableRow key={index}>
+                    return <TableRow key={index} className={currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED && !data.is_valid ? "text-red-500" : "text-black"}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{data.item_name}</TableCell>
                         <TableCell>{data.description}</TableCell>
                         <TableCell>{data.unit}</TableCell>
                         <TableCell>{toRupiah(data.price)}</TableCell>
                         <TableCell>{data.quantity}</TableCell>
+                        {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                            <TableCell>{data.stock}</TableCell>
+                            : <></>}
                         <TableCell>{toRupiah(data.price * data.quantity)}</TableCell>
                     </TableRow>
                 })}
                 <TableRow>
                     <TableCell
-                        colSpan={6}
+                        colSpan={currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ? 7 : 6}
                         className="text-right"
                     >
                         Total
@@ -559,9 +588,9 @@ export default function OrderList() {
                         Reject
                     </Button>
                     <Button
-                        onClick={() => setConfirm({ message: "Are you sure to process this order?", next: handleProcessOrder })}
+                        onClick={() => processOrderReq.is_valid ? setConfirm({ message: "Are you sure to process this order?", next: handleProcessOrder }) : {}}
                         size="md"
-                        color="green"
+                        color={processOrderReq.is_valid ? "green" : "gray"}
                     >
                         Process
                     </Button>

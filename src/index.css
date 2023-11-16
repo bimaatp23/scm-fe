@@ -31,3 +31,7 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #03527d; 
 }
+
+.modal-content::-webkit-scrollbar {
+  width: 0px;
+}
