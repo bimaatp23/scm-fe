@@ -35,7 +35,7 @@ export class OrderService {
             user_retail: this.sessionUseCase.get().username,
             total: createOrderReq.total,
             submit_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
-            data: JSON.stringify(createOrderReq.data.filter((data) => data.quantity > 0))
+            data: JSON.stringify(createOrderReq.data)
         }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
