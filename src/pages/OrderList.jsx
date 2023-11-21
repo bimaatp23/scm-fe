@@ -147,10 +147,10 @@ export default function OrderList() {
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
                             const allowedStatus = [
-                                BasicConstant.ORDER_STATUS_SUBMITTED,
-                                BasicConstant.ORDER_STATUS_PROCESS,
-                                BasicConstant.ORDER_STATUS_DELIVERY,
-                                BasicConstant.ORDER_STATUS_ARRIVAL
+                                BasicConstant.STATUS_SUBMITTED,
+                                BasicConstant.STATUS_PROCESS,
+                                BasicConstant.STATUS_DELIVERY,
+                                BasicConstant.STATUS_ARRIVAL
                             ]
                             if (currentSession.role === BasicConstant.ROLE_RETAIL) {
                                 setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
@@ -180,10 +180,10 @@ export default function OrderList() {
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
                         const allowedStatus = [
-                            BasicConstant.ORDER_STATUS_SUBMITTED,
-                            BasicConstant.ORDER_STATUS_PROCESS,
-                            BasicConstant.ORDER_STATUS_DELIVERY,
-                            BasicConstant.ORDER_STATUS_ARRIVAL
+                            BasicConstant.STATUS_SUBMITTED,
+                            BasicConstant.STATUS_PROCESS,
+                            BasicConstant.STATUS_DELIVERY,
+                            BasicConstant.STATUS_ARRIVAL
                         ]
                         if (currentSession.role === BasicConstant.ROLE_RETAIL) {
                             setOrderList(response.output_schema.filter((data) => allowedStatus.includes(data.status) && data.user_retail === currentSession.username))
@@ -731,7 +731,7 @@ export default function OrderList() {
                         </TableRow>
                     </Table>
                     <Button
-                        onClick={() => createOrderReq.total > 0 ? setConfirm({ message: "Are you sure to create this order?", next: handleCreateOrder }) : {}}
+                        onClick={() => setConfirm({ message: "Are you sure to create this order?", next: handleCreateOrder })}
                         size="md"
                         color="blue"
                     >
@@ -760,7 +760,7 @@ export default function OrderList() {
                     {currentSession.role !== BasicConstant.ROLE_RETAIL ?
                         <TableCell>{data.user_retail}</TableCell> : <></>}
                     <TableCell>
-                        {data.status === BasicConstant.ORDER_STATUS_SUBMITTED || data.status === BasicConstant.ORDER_STATUS_PROCESS ?
+                        {data.status === BasicConstant.STATUS_SUBMITTED || data.status === BasicConstant.STATUS_PROCESS ?
                             <PDFDownloadLink document={<PurchaseOrderDoc orderId={data.id} />} fileName={`Purchase-Order-${data.id}.pdf`}>
                                 {({ blob, url, loading, error }) => <Button
                                     size="md"
@@ -769,7 +769,7 @@ export default function OrderList() {
                                     Purchase Order
                                 </Button>}
                             </PDFDownloadLink> : <></>}
-                        {data.status === BasicConstant.ORDER_STATUS_DELIVERY ?
+                        {data.status === BasicConstant.STATUS_DELIVERY ?
                             <PDFDownloadLink document={<ShippingOrderDoc orderId={data.id} />} fileName={`Shipping-Order-${data.id}.pdf`}>
                                 {({ blob, url, loading, error }) => <Button
                                     size="md"
@@ -778,7 +778,7 @@ export default function OrderList() {
                                     Shipping Order
                                 </Button>}
                             </PDFDownloadLink> : <></>}
-                        {data.status === BasicConstant.ORDER_STATUS_ARRIVAL ?
+                        {data.status === BasicConstant.STATUS_ARRIVAL ?
                             <PDFDownloadLink document={<DeliveryReceiptDoc orderId={data.id} />} fileName={`Delivery-Receipt-${data.id}.pdf`}>
                                 {({ blob, url, loading, error }) => <Button
                                     size="md"
@@ -847,20 +847,20 @@ export default function OrderList() {
                     <TableCell>Unit</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Quantity</TableCell>
-                    {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                    {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_SUBMITTED ?
                         <TableCell>Stock</TableCell>
                         : <></>}
                     <TableCell>Sub Total</TableCell>
                 </TableRowHead>
                 {detailOrderList.data.map((data, index) => {
-                    return <TableRow key={index} className={currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED && !data.is_valid ? "text-red-500" : "text-black"}>
+                    return <TableRow key={index} className={currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_SUBMITTED && !data.is_valid ? "text-red-500" : "text-black"}>
                         <TableCell>{index + 1}</TableCell>
                         <TableCell>{data.item_name}</TableCell>
                         <TableCell>{data.description}</TableCell>
                         <TableCell>{data.unit}</TableCell>
                         <TableCell>{toRupiah(data.price)}</TableCell>
                         <TableCell>{data.quantity}</TableCell>
-                        {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                        {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_SUBMITTED ?
                             <TableCell>{data.stock}</TableCell>
                             : <></>}
                         <TableCell>{toRupiah(data.price * data.quantity)}</TableCell>
@@ -868,7 +868,7 @@ export default function OrderList() {
                 })}
                 <TableRow>
                     <TableCell
-                        colSpan={currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ? 7 : 6}
+                        colSpan={currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_SUBMITTED ? 7 : 6}
                         className="text-right"
                     >
                         Total
@@ -879,7 +879,7 @@ export default function OrderList() {
             <div
                 className="flex justify-center gap-2"
             >
-                {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.STATUS_SUBMITTED ?
                     <Button
                         onClick={() => setConfirm({ message: "Are you sure to cancel this order?", next: handleCancelOrder })}
                         size="md"
@@ -887,7 +887,7 @@ export default function OrderList() {
                     >
                         Cancel
                     </Button> : <></>}
-                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_SUBMITTED ?
+                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_SUBMITTED ?
                     <>
                         <Button
                             onClick={() => setConfirm({ message: "Are you sure to reject this order?", next: handleRejectOrder })}
@@ -904,7 +904,7 @@ export default function OrderList() {
                             Process
                         </Button>
                     </> : <></>}
-                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_PROCESS ?
+                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_PROCESS ?
                     <Button
                         onClick={() => setConfirm({ message: "Are you sure to delivery this order?", next: handleDeliveryOrder })}
                         size="md"
@@ -912,7 +912,7 @@ export default function OrderList() {
                     >
                         Delivery
                     </Button> : <></>}
-                {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.ORDER_STATUS_DELIVERY ?
+                {currentSession.role === BasicConstant.ROLE_RETAIL && currentStatus === BasicConstant.STATUS_DELIVERY ?
                     <Button
                         onClick={() => setConfirm({ message: "Are you sure to arrival this order?", next: handleArrivalOrder })}
                         size="md"
@@ -920,7 +920,7 @@ export default function OrderList() {
                     >
                         Arrival
                     </Button> : <></>}
-                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.ORDER_STATUS_ARRIVAL ?
+                {currentSession.role === BasicConstant.ROLE_DISTRIBUSI && currentStatus === BasicConstant.STATUS_ARRIVAL ?
                     <Button
                         onClick={() => setConfirm({ message: "Are you sure to done this order?", next: handleDoneOrder })}
                         size="md"

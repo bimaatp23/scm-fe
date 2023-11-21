@@ -26,13 +26,13 @@ export default function OrderHistory() {
                 .subscribe({
                     next: (response) => {
                         const allowedStatus = [
-                            BasicConstant.ORDER_STATUS_CANCELLED,
-                            BasicConstant.ORDER_STATUS_REJECTED,
-                            BasicConstant.ORDER_STATUS_DONE
+                            BasicConstant.STATUS_CANCELLED,
+                            BasicConstant.STATUS_REJECTED,
+                            BasicConstant.STATUS_DONE
                         ]
                         const allowedStatus2 = [
-                            BasicConstant.ORDER_STATUS_REJECTED,
-                            BasicConstant.ORDER_STATUS_DONE
+                            BasicConstant.STATUS_REJECTED,
+                            BasicConstant.STATUS_DONE
                         ]
                         if (response.error_schema.error_code === 200) {
                             if (currentSession.role === BasicConstant.ROLE_RETAIL) {
