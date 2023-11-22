@@ -19,6 +19,7 @@ export default function Sidebar(props) {
                             <ItemLink path="/user-list" name="User List" />
                             <ItemLink path="/inventory-list" name="Inventory List" />
                             <ItemLink path="/production-list" name="Production List" />
+                            <ItemLink path="/production-history" name="Production History" />
                             <ItemLink path="/order-list" name="Order List" />
                             <ItemLink path="/order-history" name="Order History" />
                         </>
@@ -28,12 +29,14 @@ export default function Sidebar(props) {
                         <>
                             <ItemLink path="/inventory-list" name="Inventory List" />
                             <ItemLink path="/production-list" name="Production List" />
+                            <ItemLink path="/production-history" name="Production History" />
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_PRODUKSI ?
                         <>
                             <ItemLink path="/production-list" name="Production List" />
+                            <ItemLink path="/production-history" name="Production History" />
                         </>
                         : <></>
                     }

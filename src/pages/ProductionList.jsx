@@ -22,6 +22,9 @@ export default function ProductionList() {
         material: [],
         product: []
     })
+    const [cancelProductionrReq, setCancelProductionrReq] = useState({
+        production_id: ""
+    })
 
     const [isStatic, setIsStatic] = useState(false)
     useEffect(() => setIsStatic(true), [])
@@ -61,9 +64,7 @@ export default function ProductionList() {
                         if (response.error_schema.error_code === 200) {
                             const allowedStatus = [
                                 BasicConstant.STATUS_SUBMITTED,
-                                BasicConstant.STATUS_PROCESS,
-                                BasicConstant.STATUS_DELIVERY,
-                                BasicConstant.STATUS_ARRIVAL
+                                BasicConstant.STATUS_PROCESS
                             ]
                             setProductionList(response.output_schema.filter((data) => allowedStatus.includes(data.status)))
                         }
@@ -79,9 +80,7 @@ export default function ProductionList() {
                     if (response.error_schema.error_code === 200) {
                         const allowedStatus = [
                             BasicConstant.STATUS_SUBMITTED,
-                            BasicConstant.STATUS_PROCESS,
-                            BasicConstant.STATUS_DELIVERY,
-                            BasicConstant.STATUS_ARRIVAL
+                            BasicConstant.STATUS_PROCESS
                         ]
                         setProductionList(response.output_schema.filter((data) => allowedStatus.includes(data.status)))
                     }
@@ -119,6 +118,22 @@ export default function ProductionList() {
                                 }
                             })
                         })
+                        getProductionList()
+                    }
+                }
+            })
+    }
+
+    const handleCancelProduction = () => {
+        useCaseFactory.cancelProduction().execute(cancelProductionrReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
                         getProductionList()
                     }
                 }
@@ -230,7 +245,7 @@ export default function ProductionList() {
                 return <TableRow key={index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{data.status}</TableCell>
-                    <TableCell>{data.submit_date}</TableCell>
+                    <TableCell>{data.process_date ?? data.submit_date}</TableCell>
                     <TableCell></TableCell>
                     <TableCell>
                         <Button
@@ -240,6 +255,9 @@ export default function ProductionList() {
                                     product: data.product
                                 })
                                 setIsModalDetailOpen(true)
+                                setCancelProductionrReq({
+                                    production_id: data.id
+                                })
                             }}
                             size="md"
                             color="yellow"
@@ -292,6 +310,18 @@ export default function ProductionList() {
                         })}
                     </Table>
                 </div>
+            </div>
+            <div
+                className="flex justify-center gap-2"
+            >
+                {currentSession.role === BasicConstant.ROLE_PRODUKSI ?
+                    <Button
+                        onClick={() => setConfirm({ message: "Are you sure to cancel this production?", next: handleCancelProduction })}
+                        size="md"
+                        color="red"
+                    >
+                        Cancel
+                    </Button> : <></>}
             </div>
         </Modal>
     </>
