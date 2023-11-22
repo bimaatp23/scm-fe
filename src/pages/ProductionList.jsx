@@ -12,6 +12,12 @@ export default function ProductionList() {
     const useCaseFactory = useMemo(() => new UseCaseFactory(), [])
     const currentSession = useMemo(() => useCaseFactory.currentSession().get(), [useCaseFactory])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
+    const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
+    const [productionList, setProductionList] = useState([])
+    const [detailProductionList, setDetailProductionList] = useState({
+        material: [],
+        product: []
+    })
     const [createProductionReq, setCreateProductionReq] = useState({
         material: [],
         product: []
@@ -49,8 +55,39 @@ export default function ProductionList() {
                         }
                     }
                 })
+            useCaseFactory.getProductionList().execute()
+                .subscribe({
+                    next: (response) => {
+                        if (response.error_schema.error_code === 200) {
+                            const allowedStatus = [
+                                BasicConstant.STATUS_SUBMITTED,
+                                BasicConstant.STATUS_PROCESS,
+                                BasicConstant.STATUS_DELIVERY,
+                                BasicConstant.STATUS_ARRIVAL
+                            ]
+                            setProductionList(response.output_schema.filter((data) => allowedStatus.includes(data.status)))
+                        }
+                    }
+                })
         }
     }, [isStatic, useCaseFactory, currentSession])
+
+    const getProductionList = () => {
+        useCaseFactory.getProductionList().execute()
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        const allowedStatus = [
+                            BasicConstant.STATUS_SUBMITTED,
+                            BasicConstant.STATUS_PROCESS,
+                            BasicConstant.STATUS_DELIVERY,
+                            BasicConstant.STATUS_ARRIVAL
+                        ]
+                        setProductionList(response.output_schema.filter((data) => allowedStatus.includes(data.status)))
+                    }
+                }
+            })
+    }
 
     const handleCreateProduction = () => {
         useCaseFactory.createProduction().execute(createProductionReq)
@@ -82,6 +119,7 @@ export default function ProductionList() {
                                 }
                             })
                         })
+                        getProductionList()
                     }
                 }
             })
@@ -180,5 +218,81 @@ export default function ProductionList() {
                 </Modal>
             </>
             : <></>}
+        <Table>
+            <TableRowHead>
+                <TableCell>#</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Update Date</TableCell>
+                <TableCell>Download</TableCell>
+                <TableCell>Action</TableCell>
+            </TableRowHead>
+            {productionList.map((data, index) => {
+                return <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{data.status}</TableCell>
+                    <TableCell>{data.submit_date}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>
+                        <Button
+                            onClick={() => {
+                                setDetailProductionList({
+                                    material: data.material,
+                                    product: data.product
+                                })
+                                setIsModalDetailOpen(true)
+                            }}
+                            size="md"
+                            color="yellow"
+                        >
+                            Detail
+                        </Button>
+                    </TableCell>
+                </TableRow>
+            })}
+        </Table>
+        <Modal
+            isOpen={isModalDetailOpen}
+            onClose={() => setIsModalDetailOpen(false)}
+            title="Detail Production"
+        >
+            <div className="grid grid-flow-col gap-x-4">
+                <div>
+                    <Table>
+                        <TableRowHead>
+                            <TableCell>#</TableCell>
+                            <TableCell>Material Name</TableCell>
+                            <TableCell>Unit</TableCell>
+                            <TableCell>Quantity</TableCell>
+                        </TableRowHead>
+                        {detailProductionList.material.map((data, index) => {
+                            return <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{data.item_name}</TableCell>
+                                <TableCell>{data.unit}</TableCell>
+                                <TableCell>{data.quantity}</TableCell>
+                            </TableRow>
+                        })}
+                    </Table>
+                </div>
+                <div>
+                    <Table>
+                        <TableRowHead>
+                            <TableCell>#</TableCell>
+                            <TableCell>Product Name</TableCell>
+                            <TableCell>Unit</TableCell>
+                            <TableCell>Quantity</TableCell>
+                        </TableRowHead>
+                        {detailProductionList.product.map((data, index) => {
+                            return <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{data.item_name}</TableCell>
+                                <TableCell>{data.unit}</TableCell>
+                                <TableCell>{data.quantity}</TableCell>
+                            </TableRow>
+                        })}
+                    </Table>
+                </div>
+            </div>
+        </Modal>
     </>
 }
