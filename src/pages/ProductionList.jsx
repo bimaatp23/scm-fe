@@ -13,6 +13,7 @@ export default function ProductionList() {
     const currentSession = useMemo(() => useCaseFactory.currentSession().get(), [useCaseFactory])
     const [isModalAddOpen, setIsModalAddOpen] = useState(false)
     const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
+    const [stockList, setStockList] = useState([])
     const [productionList, setProductionList] = useState([])
     const [detailProductionList, setDetailProductionList] = useState({
         material: [],
@@ -29,6 +30,11 @@ export default function ProductionList() {
     const [rejectProductionReq, setRejectProductionReq] = useState({
         production_id: ""
     })
+    const [processProductionReq, setProcessProductionReq] = useState({
+        is_valid: true,
+        production_id: "",
+        material: []
+    })
 
     const [isStatic, setIsStatic] = useState(false)
     useEffect(() => setIsStatic(true), [])
@@ -39,6 +45,7 @@ export default function ProductionList() {
                 .subscribe({
                     next: (response) => {
                         if (response.error_schema.error_code === 200) {
+                            setStockList(response.output_schema.filter((data) => data.tipe === BasicConstant.INVENTORY_BAHAN))
                             setCreateProductionReq({
                                 material: response.output_schema.filter((data) => data.tipe === BasicConstant.INVENTORY_BAHAN).map((data) => {
                                     return {
@@ -76,6 +83,17 @@ export default function ProductionList() {
                 })
         }
     }, [isStatic, useCaseFactory, currentSession])
+
+    const getStockList = () => {
+        useCaseFactory.getInventoryList().execute()
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setStockList(response.output_schema.filter((data) => data.tipe === BasicConstant.INVENTORY_BAHAN))
+                    }
+                }
+            })
+    }
 
     const getProductionList = () => {
         useCaseFactory.getProductionList().execute()
@@ -154,6 +172,23 @@ export default function ProductionList() {
                             message: response.error_schema.error_message
                         })
                         setIsModalDetailOpen(false)
+                        getProductionList()
+                    }
+                }
+            })
+    }
+
+    const handleProcessProduction = () => {
+        useCaseFactory.processProduction().execute(processProductionReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        getStockList()
                         getProductionList()
                     }
                 }
@@ -271,8 +306,15 @@ export default function ProductionList() {
                         <Button
                             onClick={() => {
                                 setIsModalDetailOpen(true)
+                                const newDetailMaterial = data.material.map((data) => {
+                                    return {
+                                        ...data,
+                                        stock: stockList.filter((data2) => data2.id === data.inventory_id)[0].stock,
+                                        is_valid: data.quantity <= stockList.filter((data2) => data2.id === data.inventory_id)[0].stock
+                                    }
+                                })
                                 setDetailProductionList({
-                                    material: data.material,
+                                    material: newDetailMaterial,
                                     product: data.product
                                 })
                                 setCurrentStatus(data.status)
@@ -281,6 +323,11 @@ export default function ProductionList() {
                                 })
                                 setRejectProductionReq({
                                     production_id: data.id
+                                })
+                                setProcessProductionReq({
+                                    is_valid: !(newDetailMaterial.some((data) => data.is_valid === false)),
+                                    production_id: data.id,
+                                    material: newDetailMaterial
                                 })
                             }}
                             size="md"
@@ -305,13 +352,19 @@ export default function ProductionList() {
                             <TableCell>Material Name</TableCell>
                             <TableCell>Unit</TableCell>
                             <TableCell>Quantity</TableCell>
+                            {currentSession.role === BasicConstant.ROLE_GUDANG && currentStatus === BasicConstant.STATUS_SUBMITTED ?
+                                <TableCell>Stock</TableCell>
+                                : <></>}
                         </TableRowHead>
                         {detailProductionList.material.map((data, index) => {
-                            return <TableRow key={index}>
+                            return <TableRow key={index} className={currentSession.role === BasicConstant.ROLE_GUDANG && currentStatus === BasicConstant.STATUS_SUBMITTED && !data.is_valid ? "text-red-500" : "text-black"}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{data.item_name}</TableCell>
                                 <TableCell>{data.unit}</TableCell>
                                 <TableCell>{data.quantity}</TableCell>
+                                {currentSession.role === BasicConstant.ROLE_GUDANG && currentStatus === BasicConstant.STATUS_SUBMITTED ?
+                                    <TableCell>{data.stock}</TableCell>
+                                    : <></>}
                             </TableRow>
                         })}
                     </Table>
@@ -347,13 +400,22 @@ export default function ProductionList() {
                         Cancel
                     </Button> : <></>}
                 {currentSession.role === BasicConstant.ROLE_GUDANG && currentStatus === BasicConstant.STATUS_SUBMITTED ?
-                    <Button
-                        onClick={() => setConfirm({ message: "Are you sure to reject this production?", next: handleRejectProduction })}
-                        size="md"
-                        color="red"
-                    >
-                        Reject
-                    </Button> : <></>}
+                    <>
+                        <Button
+                            onClick={() => setConfirm({ message: "Are you sure to reject this production?", next: handleRejectProduction })}
+                            size="md"
+                            color="red"
+                        >
+                            Reject
+                        </Button>
+                        <Button
+                            onClick={() => processProductionReq.is_valid ? setConfirm({ message: "Are you sure to process this production?", next: handleProcessProduction }) : {}}
+                            size="md"
+                            color={processProductionReq.is_valid ? "green" : "gray"}
+                        >
+                            Process
+                        </Button>
+                    </> : <></>}
             </div>
         </Modal>
     </>
