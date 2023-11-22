@@ -86,4 +86,24 @@ export class ProductionService {
                 })
             )
     }
+
+    process(processProductionReq) {
+        return from(axios.post(this.endpoint + "/process", {
+            production_id: processProductionReq.production_id,
+            process_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
+            material: JSON.stringify(processProductionReq.material)
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
 }

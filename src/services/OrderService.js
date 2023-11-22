@@ -93,7 +93,7 @@ export class OrderService {
         return from(axios.post(this.endpoint + "/process", {
             order_id: processOrderReq.order_id,
             process_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
-            data: JSON.stringify(processOrderReq.data.filter((data) => data.quantity > 0))
+            data: JSON.stringify(processOrderReq.data)
         }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {

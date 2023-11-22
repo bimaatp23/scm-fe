@@ -180,6 +180,12 @@ export class RejectProductionUseCase {
     }
 }
 
+export class ProcessProductionUseCase {
+    execute(processProductionReq) {
+        return new ProductionService().process(processProductionReq)
+    }
+}
+
 // Order Use Case
 
 export class GetOrderListUseCase {
@@ -270,6 +276,7 @@ export class UseCaseFactory {
     createProduction() { return new CreateProductionUseCase() }
     cancelProduction() { return new CancelProductionUseCase() }
     rejectProduction() { return new RejectProductionUseCase() }
+    processProduction() { return new ProcessProductionUseCase() }
     // Order Use Case
     getOrderList() { return new GetOrderListUseCase() }
     createOrder() { return new CreateOrderUseCase() }
