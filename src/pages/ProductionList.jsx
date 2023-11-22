@@ -1,3 +1,4 @@
+import { Document, PDFDownloadLink, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 import { useEffect, useMemo, useState } from "react"
 import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
@@ -38,6 +39,67 @@ export default function ProductionList() {
     const [doneProductionReq, setDoneProductionReq] = useState({
         production_id: "",
         product: []
+    })
+
+    const styles = StyleSheet.create({
+        page: {
+            flexDirection: "row",
+            backgroundColor: "#FFF",
+            padding: 50,
+            position: "relative"
+        },
+        section: {
+            flexGrow: 1
+        },
+        bold: {
+            fontFamily: "Helvetica-Bold"
+        },
+        italic: {
+            fontFamily: "Times-Italic"
+        },
+        table: {
+            flexDirection: "row",
+            alignItems: "center",
+            borderBottom: 1,
+            borderLeft: 1,
+            padding: 0,
+            margin: 0
+        },
+        tableBlank: {
+            flexDirection: "row",
+            alignItems: "center",
+            padding: 0,
+            margin: 0
+        },
+        innerTable: {
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            paddingLeft: 2,
+            paddingRight: 2,
+            fontSize: 12,
+            borderRight: 1
+        },
+        innerTableBlank: {
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            paddingLeft: 2,
+            paddingRight: 2,
+            fontSize: 12
+        },
+        table1: {
+            width: "10%"
+        },
+        table2: {
+            width: "50%"
+        },
+        table3: {
+            width: "20%"
+        },
+        table4: {
+            width: "20%"
+        }
     })
 
     const [isStatic, setIsStatic] = useState(false)
@@ -215,6 +277,85 @@ export default function ProductionList() {
             })
     }
 
+    const MaterialRequisitionDoc = (props) => {
+        const { productionId } = props
+        const result = productionList.filter((data) => data.id === productionId)
+
+        return <Document>
+            <Page size={"A4"} style={styles.page}>
+                <View style={styles.section}>
+                    <Text style={{ ...styles.bold, textAlign: "center", fontSize: 16 }}>Material Requisition</Text>
+                    <div style={{ marginBottom: 5 }} />
+                    <Text style={{ ...styles.bold, textAlign: "center", fontSize: 12 }}>No. {result[0].id}</Text>
+                    <Text style={{ textAlign: "center", fontSize: 12 }}>{result[0].submit_date}</Text>
+                    <div style={{ marginBottom: 15 }} />
+                    <div style={{ ...styles.table, borderTop: 1 }}>
+                        <div style={{ ...styles.innerTable, ...styles.table1, ...styles.bold, textAlign: "center" }}>
+                            <Text>#</Text>
+                        </div>
+                        <div style={{ ...styles.innerTable, ...styles.table2, ...styles.bold, textAlign: "center" }}>
+                            <Text>Material Name</Text>
+                        </div>
+                        <div style={{ ...styles.innerTable, ...styles.table3, ...styles.bold, textAlign: "center" }}>
+                            <Text>Unit</Text>
+                        </div>
+                        <div style={{ ...styles.innerTable, ...styles.table4, ...styles.bold, textAlign: "center" }}>
+                            <Text>Quantity</Text>
+                        </div>
+                    </div>
+                    {result[0].material.map((data, index) => {
+                        return <div style={{ ...styles.table }} key={index}>
+                            <div style={{ ...styles.innerTable, ...styles.table1, textAlign: "center" }}>
+                                <Text>{index + 1}</Text>
+                            </div>
+                            <div style={{ ...styles.innerTable, ...styles.table2 }}>
+                                <Text>{data.item_name}</Text>
+                            </div>
+                            <div style={{ ...styles.innerTable, ...styles.table3, textAlign: "center" }}>
+                                <Text>{data.unit}</Text>
+                            </div>
+                            <div style={{ ...styles.innerTable, ...styles.table4, textAlign: "center" }}>
+                                <Text>{data.quantity}</Text>
+                            </div>
+                        </div>
+                    })}
+                    <div style={{ marginBottom: 15 }} />
+                    <div style={{ ...styles.table, borderTop: 1 }}>
+                        <div style={{ ...styles.innerTable, ...styles.table1, ...styles.bold, textAlign: "center" }}>
+                            <Text>#</Text>
+                        </div>
+                        <div style={{ ...styles.innerTable, ...styles.table2, ...styles.bold, textAlign: "center" }}>
+                            <Text>Product Name</Text>
+                        </div>
+                        <div style={{ ...styles.innerTable, ...styles.table3, ...styles.bold, textAlign: "center" }}>
+                            <Text>Unit</Text>
+                        </div>
+                        <div style={{ ...styles.innerTable, ...styles.table4, ...styles.bold, textAlign: "center" }}>
+                            <Text>Quantity</Text>
+                        </div>
+                    </div>
+                    {result[0].product.map((data, index) => {
+                        return <div style={{ ...styles.table }} key={index}>
+                            <div style={{ ...styles.innerTable, ...styles.table1, textAlign: "center" }}>
+                                <Text>{index + 1}</Text>
+                            </div>
+                            <div style={{ ...styles.innerTable, ...styles.table2 }}>
+                                <Text>{data.item_name}</Text>
+                            </div>
+                            <div style={{ ...styles.innerTable, ...styles.table3, textAlign: "center" }}>
+                                <Text>{data.unit}</Text>
+                            </div>
+                            <div style={{ ...styles.innerTable, ...styles.table4, textAlign: "center" }}>
+                                <Text>{data.quantity}</Text>
+                            </div>
+                        </div>
+                    })}
+                    <Text style={{ ...styles.bold, fontSize: 10, position: "absolute", right: 0, bottom: 0 }}>eSCM PT Rajawali</Text>
+                </View>
+            </Page>
+        </Document>
+    }
+
     return <>
         <TitlePage>Production List</TitlePage>
         {currentSession.role === BasicConstant.ROLE_PRODUKSI ?
@@ -321,7 +462,16 @@ export default function ProductionList() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{data.status}</TableCell>
                     <TableCell>{data.process_date ?? data.submit_date}</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>
+                        <PDFDownloadLink document={<MaterialRequisitionDoc productionId={data.id} />} fileName={`Material-Requisition-${data.id}.pdf`}>
+                            {({ blob, url, loading, error }) => <Button
+                                size="md"
+                                color="yellow"
+                            >
+                                Material Requisition
+                            </Button>}
+                        </PDFDownloadLink>
+                    </TableCell>
                     <TableCell>
                         <Button
                             onClick={() => {
