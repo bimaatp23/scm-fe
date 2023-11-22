@@ -35,6 +35,10 @@ export default function ProductionList() {
         production_id: "",
         material: []
     })
+    const [doneProductionReq, setDoneProductionReq] = useState({
+        production_id: "",
+        product: []
+    })
 
     const [isStatic, setIsStatic] = useState(false)
     useEffect(() => setIsStatic(true), [])
@@ -195,6 +199,22 @@ export default function ProductionList() {
             })
     }
 
+    const handleDoneProduction = () => {
+        useCaseFactory.doneProduction().execute(doneProductionReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        getProductionList()
+                    }
+                }
+            })
+    }
+
     return <>
         <TitlePage>Production List</TitlePage>
         {currentSession.role === BasicConstant.ROLE_PRODUKSI ?
@@ -329,6 +349,10 @@ export default function ProductionList() {
                                     production_id: data.id,
                                     material: newDetailMaterial
                                 })
+                                setDoneProductionReq({
+                                    production_id: data.id,
+                                    product: data.product
+                                })
                             }}
                             size="md"
                             color="yellow"
@@ -416,6 +440,14 @@ export default function ProductionList() {
                             Process
                         </Button>
                     </> : <></>}
+                {currentSession.role === BasicConstant.ROLE_PRODUKSI && currentStatus === BasicConstant.STATUS_PROCESS ?
+                    <Button
+                        onClick={() => setConfirm({ message: "Are you sure to done this production?", next: handleDoneProduction })}
+                        size="md"
+                        color="green"
+                    >
+                        Done
+                    </Button> : <></>}
             </div>
         </Modal>
     </>
