@@ -18,11 +18,15 @@ export default function ProductionList() {
         material: [],
         product: []
     })
+    const [currentStatus, setCurrentStatus] = useState("")
     const [createProductionReq, setCreateProductionReq] = useState({
         material: [],
         product: []
     })
-    const [cancelProductionrReq, setCancelProductionrReq] = useState({
+    const [cancelProductionReq, setCancelProductionReq] = useState({
+        production_id: ""
+    })
+    const [rejectProductionReq, setRejectProductionReq] = useState({
         production_id: ""
     })
 
@@ -125,7 +129,23 @@ export default function ProductionList() {
     }
 
     const handleCancelProduction = () => {
-        useCaseFactory.cancelProduction().execute(cancelProductionrReq)
+        useCaseFactory.cancelProduction().execute(cancelProductionReq)
+            .subscribe({
+                next: (response) => {
+                    if (response.error_schema.error_code === 200) {
+                        setNotification({
+                            icon: "success",
+                            message: response.error_schema.error_message
+                        })
+                        setIsModalDetailOpen(false)
+                        getProductionList()
+                    }
+                }
+            })
+    }
+
+    const handleRejectProduction = () => {
+        useCaseFactory.rejectProduction().execute(rejectProductionReq)
             .subscribe({
                 next: (response) => {
                     if (response.error_schema.error_code === 200) {
@@ -250,12 +270,16 @@ export default function ProductionList() {
                     <TableCell>
                         <Button
                             onClick={() => {
+                                setIsModalDetailOpen(true)
                                 setDetailProductionList({
                                     material: data.material,
                                     product: data.product
                                 })
-                                setIsModalDetailOpen(true)
-                                setCancelProductionrReq({
+                                setCurrentStatus(data.status)
+                                setCancelProductionReq({
+                                    production_id: data.id
+                                })
+                                setRejectProductionReq({
                                     production_id: data.id
                                 })
                             }}
@@ -314,13 +338,21 @@ export default function ProductionList() {
             <div
                 className="flex justify-center gap-2"
             >
-                {currentSession.role === BasicConstant.ROLE_PRODUKSI ?
+                {currentSession.role === BasicConstant.ROLE_PRODUKSI && currentStatus === BasicConstant.STATUS_SUBMITTED ?
                     <Button
                         onClick={() => setConfirm({ message: "Are you sure to cancel this production?", next: handleCancelProduction })}
                         size="md"
                         color="red"
                     >
                         Cancel
+                    </Button> : <></>}
+                {currentSession.role === BasicConstant.ROLE_GUDANG && currentStatus === BasicConstant.STATUS_SUBMITTED ?
+                    <Button
+                        onClick={() => setConfirm({ message: "Are you sure to reject this production?", next: handleRejectProduction })}
+                        size="md"
+                        color="red"
+                    >
+                        Reject
                     </Button> : <></>}
             </div>
         </Modal>
