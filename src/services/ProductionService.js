@@ -106,4 +106,24 @@ export class ProductionService {
                 })
             )
     }
+
+    done(doneProductionReq) {
+        return from(axios.post(this.endpoint + "/done", {
+            production_id: doneProductionReq.production_id,
+            done_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
+            product: JSON.stringify(doneProductionReq.product)
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
 }
