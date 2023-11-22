@@ -168,6 +168,12 @@ export class CreateProductionUseCase {
     }
 }
 
+export class CancelProductionUseCase {
+    execute(cancelProductionReq) {
+        return new ProductionService().cancel(cancelProductionReq)
+    }
+}
+
 // Order Use Case
 
 export class GetOrderListUseCase {
@@ -256,6 +262,7 @@ export class UseCaseFactory {
     // Production Use Case
     getProductionList() { return new GetProductionListUseCase() }
     createProduction() { return new CreateProductionUseCase() }
+    cancelProduction() { return new CancelProductionUseCase() }
     // Order Use Case
     getOrderList() { return new GetOrderListUseCase() }
     createOrder() { return new CreateOrderUseCase() }

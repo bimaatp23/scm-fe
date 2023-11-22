@@ -48,4 +48,23 @@ export class ProductionService {
                 })
             )
     }
+
+    cancel(cancelProductionReq) {
+        return from(axios.post(this.endpoint + "/cancel", {
+            production_id: cancelProductionReq.production_id,
+            cancel_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
 }
