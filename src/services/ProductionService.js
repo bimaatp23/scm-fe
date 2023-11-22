@@ -12,6 +12,22 @@ export class ProductionService {
 
     endpoint = process.env.REACT_APP_ENDPOINT + "/production"
 
+    getList() {
+        return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
+
     create(createProductionReq) {
         return from(axios.post(this.endpoint + "/create", {
             production_id: this.timeUseCase.get().getTime(),

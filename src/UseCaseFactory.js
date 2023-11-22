@@ -138,6 +138,11 @@ export class DeleteInventoryUseCase {
 
 // Production Use case
 
+export class GetProductionListUseCase {
+    execute() {
+        return new ProductionService().getList()
+    }
+}
 export class CreateProductionUseCase {
     validate(createProductionReq) {
         let validateCount = 0
@@ -249,6 +254,7 @@ export class UseCaseFactory {
     updateInventory() { return new UpdateInventoryUseCase() }
     deleteInventory() { return new DeleteInventoryUseCase() }
     // Production Use Case
+    getProductionList() { return new GetProductionListUseCase() }
     createProduction() { return new CreateProductionUseCase() }
     // Order Use Case
     getOrderList() { return new GetOrderListUseCase() }
