@@ -42,6 +42,7 @@ export default function Sidebar(props) {
                     }
                     {currentSession.role === BasicConstant.ROLE_DISTRIBUSI ?
                         <>
+                            <ItemLink path="/inventory-list" name="Inventory List" />
                             <ItemLink path="/order-list" name="Order List" />
                             <ItemLink path="/order-history" name="Order History" />
                         </>
