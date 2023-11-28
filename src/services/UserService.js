@@ -123,4 +123,20 @@ export class UserService {
                 })
             )
     }
+
+    createSupplier(createSupplierReq) {
+        return from(axios.post(this.endpoint + "/create-supplier", createSupplierReq, this.baseConfig.noJwtConfig))
+            .pipe(
+                map((response) => {
+                    return response.data
+                }),
+                catchError((error) => {
+                    setNotification({
+                        icon: "error",
+                        message: error.response.data.error_schema.error_message
+                    })
+                    return of(error.response.data)
+                })
+            )
+    }
 }

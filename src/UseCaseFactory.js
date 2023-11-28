@@ -105,6 +105,12 @@ export class CreateRetailUseCase {
     }
 }
 
+export class CreateSupplierUseCase {
+    execute(createSupplierReq) {
+        return new UserService().createSupplier(createSupplierReq)
+    }
+}
+
 // Inventory Use Case
 export class GetInventoryListUseCase {
     execute() {
@@ -271,6 +277,7 @@ export class UseCaseFactory {
     deleteUser() { return new DeleteUserUseCase() }
     changePassword() { return new ChangePasswordUseCase() }
     createRetail() { return new CreateRetailUseCase() }
+    createSupplier() { return new CreateSupplierUseCase() }
     // Inventory Use Case
     getInventoryList() { return new GetInventoryListUseCase() }
     getInventoryItemList() { return new GetInventoryItemListUseCase() }
