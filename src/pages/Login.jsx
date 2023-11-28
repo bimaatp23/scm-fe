@@ -83,9 +83,9 @@ export default function Login() {
             Create Retail
           </Button>
           <Button
-            onClick={() => { }}
+            onClick={() => window.location.assign("/create-supplier")}
             size="sm"
-            color="gray"
+            color="green"
             className="mx-1"
           >
             Create Supplier
