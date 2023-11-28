@@ -2,6 +2,7 @@ import { of } from "rxjs"
 import { setNotification } from "./Utils"
 import { InventoryService } from "./services/InventoryService"
 import { OrderService } from "./services/OrderService"
+import { ProductService } from "./services/ProductService"
 import { ProductionService } from "./services/ProductionService"
 import { UserService } from "./services/UserService"
 
@@ -264,6 +265,32 @@ export class DoneOrderUseCase {
     }
 }
 
+// Product Use Case
+
+export class GetProductListUseCase {
+    execute() {
+        return new ProductService().getList()
+    }
+}
+
+export class CreateProductUseCase {
+    execute(createProductReq) {
+        return new ProductService().create(createProductReq)
+    }
+}
+
+export class UpdateProductUseCase {
+    execute(updateProductReq) {
+        return new ProductService().update(updateProductReq)
+    }
+}
+
+export class DeleteProductUseCase {
+    execute(deleteProductReq) {
+        return new ProductService().delete(deleteProductReq)
+    }
+}
+
 export class UseCaseFactory {
     // Time Use Case
     currentTime() { return new TimeUseCase() }
@@ -300,4 +327,9 @@ export class UseCaseFactory {
     deliveryOrder() { return new DeliveryOrderUseCase() }
     arrivalOrder() { return new ArrivalOrderUseCase() }
     doneOrder() { return new DoneOrderUseCase() }
+    // Product Use Case
+    getProductList() { return new GetProductListUseCase() }
+    createProduct() { return new CreateProductUseCase() }
+    updateProduct() { return new UpdateProductUseCase() }
+    deleteProduct() { return new DeleteProductUseCase() }
 }
