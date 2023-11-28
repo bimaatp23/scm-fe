@@ -144,7 +144,7 @@ export default function InventoryList() {
             createInventoryReq.unit === "")
     }
 
-    const handleCreateInventoryReq = () => {
+    const handleCreateInventory = () => {
         useCaseFactory.createInventory().execute(createInventoryReq)
             .subscribe({
                 next: (response) => {
@@ -317,7 +317,7 @@ export default function InventoryList() {
                         })}
                     />
                     <Button
-                        onClick={() => validateCreateInventoryReq() ? setConfirm({ message: "Are you sure to create this inventory?", next: handleCreateInventoryReq }) : {}}
+                        onClick={() => validateCreateInventoryReq() ? setConfirm({ message: "Are you sure to create this inventory?", next: handleCreateInventory }) : {}}
                         size="md"
                         color="blue"
                     >

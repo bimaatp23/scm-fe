@@ -55,6 +55,12 @@ export default function Sidebar(props) {
                         </>
                         : <></>
                     }
+                    {currentSession.role === BasicConstant.ROLE_SUPPLIER ?
+                        <>
+                            <ItemLink path="/product-list" name="My Product" />
+                        </>
+                        : <></>
+                    }
                 </ul>
             </div>
             <div>
