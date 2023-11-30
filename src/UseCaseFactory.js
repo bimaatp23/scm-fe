@@ -2,7 +2,7 @@ import { of } from "rxjs"
 import { setNotification } from "./Utils"
 import { InventoryService } from "./services/InventoryService"
 import { OrderService } from "./services/OrderService"
-import { ProductService } from "./services/ProductService"
+import { ProcurementService } from "./services/ProcurementService"
 import { ProductionService } from "./services/ProductionService"
 import { UserService } from "./services/UserService"
 
@@ -109,6 +109,12 @@ export class CreateRetailUseCase {
 export class CreateSupplierUseCase {
     execute(createSupplierReq) {
         return new UserService().createSupplier(createSupplierReq)
+    }
+}
+
+export class GetSupplierListUseCase {
+    execute() {
+        return new UserService().supplierList()
     }
 }
 
@@ -265,29 +271,70 @@ export class DoneOrderUseCase {
     }
 }
 
-// Product Use Case
+// Procurement Use Case
 
-export class GetProductListUseCase {
+export class GetProcurementListUseCase {
     execute() {
-        return new ProductService().getList()
+        return new ProcurementService().getList()
     }
 }
 
-export class CreateProductUseCase {
-    execute(createProductReq) {
-        return new ProductService().create(createProductReq)
+export class CreateProcurementUseCase {
+    validate(createProcurementReq) {
+        let validateCount = 0
+        if (createProcurementReq.data.length === 0) {
+            validateCount += 1
+        }
+        return validateCount
+    }
+
+    execute(createProcurementReq) {
+        const newCreateProcurementReq = {
+            total: createProcurementReq.total,
+            user_supplier: createProcurementReq.user_supplier,
+            data: createProcurementReq.data.filter((data) => data.quantity > 0)
+        }
+        if (this.validate(newCreateProcurementReq) === 0) {
+            return new ProcurementService().create(newCreateProcurementReq)
+        } else {
+            return new BaseResp().emptyData()
+        }
     }
 }
 
-export class UpdateProductUseCase {
-    execute(updateProductReq) {
-        return new ProductService().update(updateProductReq)
+export class CancelProcurementUseCase {
+    execute(cancelProcurementReq) {
+        return new ProcurementService().cancel(cancelProcurementReq)
     }
 }
 
-export class DeleteProductUseCase {
-    execute(deleteProductReq) {
-        return new ProductService().delete(deleteProductReq)
+export class RejectProcurementUseCase {
+    execute(rejectProcurementReq) {
+        return new ProcurementService().reject(rejectProcurementReq)
+    }
+}
+
+export class ProcessProcurementUseCase {
+    execute(processProcurementReq) {
+        return new ProcurementService().process(processProcurementReq)
+    }
+}
+
+export class DeliveryProcurementUseCase {
+    execute(deliveryProcurementReq) {
+        return new ProcurementService().delivery(deliveryProcurementReq)
+    }
+}
+
+export class ArrivalProcurementUseCase {
+    execute(arrivalProcurementReq) {
+        return new ProcurementService().arrival(arrivalProcurementReq)
+    }
+}
+
+export class DoneProcurementUseCase {
+    execute(doneProcurementReq) {
+        return new ProcurementService().done(doneProcurementReq)
     }
 }
 
@@ -305,6 +352,7 @@ export class UseCaseFactory {
     changePassword() { return new ChangePasswordUseCase() }
     createRetail() { return new CreateRetailUseCase() }
     createSupplier() { return new CreateSupplierUseCase() }
+    getSupplierList() { return new GetSupplierListUseCase() }
     // Inventory Use Case
     getInventoryList() { return new GetInventoryListUseCase() }
     getInventoryItemList() { return new GetInventoryItemListUseCase() }
@@ -327,9 +375,13 @@ export class UseCaseFactory {
     deliveryOrder() { return new DeliveryOrderUseCase() }
     arrivalOrder() { return new ArrivalOrderUseCase() }
     doneOrder() { return new DoneOrderUseCase() }
-    // Product Use Case
-    getProductList() { return new GetProductListUseCase() }
-    createProduct() { return new CreateProductUseCase() }
-    updateProduct() { return new UpdateProductUseCase() }
-    deleteProduct() { return new DeleteProductUseCase() }
+    // Procurement Use Case
+    getProcurementList() { return new GetProcurementListUseCase() }
+    createProcurement() { return new CreateProcurementUseCase() }
+    cancelProcurement() { return new CancelProcurementUseCase() }
+    rejectProcurement() { return new RejectProcurementUseCase() }
+    processProcurement() { return new ProcessProcurementUseCase() }
+    deliveryProcurement() { return new DeliveryProcurementUseCase() }
+    arrivalProcurement() { return new ArrivalProcurementUseCase() }
+    doneProcurement() { return new DoneProcurementUseCase() }
 }

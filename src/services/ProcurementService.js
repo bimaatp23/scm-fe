@@ -1,32 +1,17 @@
 import axios from "axios"
+import moment from "moment"
 import { from, map, of } from "rxjs"
 import { catchError } from "rxjs/operators"
-import { SessionUseCase } from "../UseCaseFactory"
+import { SessionUseCase, TimeUseCase } from "../UseCaseFactory"
 import { setNotification } from "../Utils"
 import { BaseConfig } from "./BaseConfig"
 
-export class UserService {
+export class ProcurementService {
     baseConfig = new BaseConfig()
     sessionUseCase = new SessionUseCase()
+    timeUseCase = new TimeUseCase()
 
-    endpoint = process.env.REACT_APP_ENDPOINT + "/user"
-
-    login(loginReq) {
-        return from(axios.post(this.endpoint + "/login", loginReq, this.baseConfig.noJwtConfig))
-            .pipe(
-                map((response) => {
-                    this.sessionUseCase.set(response.data.output_schema)
-                    return response.data
-                }),
-                catchError((error) => {
-                    setNotification({
-                        icon: "error",
-                        message: error.response.data.error_schema.error_message
-                    })
-                    return of(error.response.data)
-                })
-            )
-    }
+    endpoint = process.env.REACT_APP_ENDPOINT + "/procurement"
 
     getList() {
         return from(axios.get(this.endpoint + "/list", this.baseConfig.jwtConfig))
@@ -44,8 +29,14 @@ export class UserService {
             )
     }
 
-    create(createUserReq) {
-        return from(axios.post(this.endpoint + "/create", createUserReq, this.baseConfig.jwtConfig))
+    create(createProcurementReq) {
+        return from(axios.post(this.endpoint + "/create", {
+            procurement_id: this.timeUseCase.get().getTime(),
+            user_supplier: createProcurementReq.user_supplier,
+            total: createProcurementReq.total,
+            submit_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
+            data: JSON.stringify(createProcurementReq.data)
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
@@ -60,8 +51,11 @@ export class UserService {
             )
     }
 
-    update(updateUserReq) {
-        return from(axios.post(this.endpoint + "/update", updateUserReq, this.baseConfig.jwtConfig))
+    cancel(cancelProcurementReq) {
+        return from(axios.post(this.endpoint + "/cancel", {
+            procurement_id: cancelProcurementReq.procurement_id,
+            cancel_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
@@ -76,8 +70,11 @@ export class UserService {
             )
     }
 
-    delete(deleteUserReq) {
-        return from(axios.post(this.endpoint + "/delete", deleteUserReq, this.baseConfig.jwtConfig))
+    reject(rejectProcurementReq) {
+        return from(axios.post(this.endpoint + "/reject", {
+            procurement_id: rejectProcurementReq.procurement_id,
+            reject_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
@@ -92,8 +89,11 @@ export class UserService {
             )
     }
 
-    changePassword(deleteUserReq) {
-        return from(axios.post(this.endpoint + "/change-password", deleteUserReq, this.baseConfig.jwtConfig))
+    process(processProcurementReq) {
+        return from(axios.post(this.endpoint + "/process", {
+            procurement_id: processProcurementReq.procurement_id,
+            process_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
@@ -108,8 +108,11 @@ export class UserService {
             )
     }
 
-    createRetail(createRetailReq) {
-        return from(axios.post(this.endpoint + "/create-retail", createRetailReq, this.baseConfig.noJwtConfig))
+    delivery(deliveryProcurementReq) {
+        return from(axios.post(this.endpoint + "/delivery", {
+            procurement_id: deliveryProcurementReq.procurement_id,
+            delivery_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
@@ -124,8 +127,12 @@ export class UserService {
             )
     }
 
-    createSupplier(createSupplierReq) {
-        return from(axios.post(this.endpoint + "/create-supplier", createSupplierReq, this.baseConfig.noJwtConfig))
+    arrival(arrivalProcurementReq) {
+        return from(axios.post(this.endpoint + "/arrival", {
+            procurement_id: arrivalProcurementReq.procurement_id,
+            arrival_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss"),
+            data: JSON.stringify(arrivalProcurementReq.data)
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
@@ -140,8 +147,11 @@ export class UserService {
             )
     }
 
-    supplierList() {
-        return from(axios.get(this.endpoint + "/supplier-list", this.baseConfig.jwtConfig))
+    done(doneProcurementReq) {
+        return from(axios.post(this.endpoint + "/done", {
+            procurement_id: doneProcurementReq.procurement_id,
+            done_date: moment(this.timeUseCase.get()).format("YYYY-MM-DD HH:mm:ss")
+        }, this.baseConfig.jwtConfig))
             .pipe(
                 map((response) => {
                     return response.data
