@@ -47,7 +47,7 @@ export default function ProcurementHistory() {
     }, [isStatic, useCaseFactory, currentSession])
 
     return <>
-        <TitlePage>Procurement</TitlePage>
+        <TitlePage>Procurement History</TitlePage>
         <Table>
             <TableRowHead>
                 <TableCell>#</TableCell>
