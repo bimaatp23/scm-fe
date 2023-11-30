@@ -306,7 +306,7 @@ export default function ProcurementList() {
                                             newData[index].quantity = e.target.value
                                             setCreateProcurementReq({
                                                 total: newData.reduce((accumulator, item) => {
-                                                    return accumulator + (item.price * item.quantity);
+                                                    return accumulator + (item.price * item.quantity)
                                                 }, 0),
                                                 user_supplier: createProcurementReq.user_supplier,
                                                 data: newData

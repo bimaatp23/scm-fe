@@ -710,7 +710,7 @@ export default function OrderList() {
                                             newData[index].quantity = e.target.value
                                             setCreateOrderReq({
                                                 total: newData.reduce((accumulator, item) => {
-                                                    return accumulator + (item.price * item.quantity);
+                                                    return accumulator + (item.price * item.quantity)
                                                 }, 0),
                                                 data: newData
                                             })

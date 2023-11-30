@@ -23,12 +23,14 @@ export default function Sidebar(props) {
                             <ItemLink path="/order-list" name="Order List" />
                             <ItemLink path="/order-history" name="Order History" />
                             <ItemLink path="/procurement-list" name="Procurement List" />
+                            <ItemLink path="/procurement-history" name="Procurement History" />
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_PENGADAAN ?
                         <>
                             <ItemLink path="/procurement-list" name="Procurement List" />
+                            <ItemLink path="/procurement-history" name="Procurement History" />
                         </>
                         : <></>
                     }
@@ -37,6 +39,7 @@ export default function Sidebar(props) {
                             <ItemLink path="/inventory-list" name="Inventory List" />
                             <ItemLink path="/production-list" name="Production List" />
                             <ItemLink path="/production-history" name="Production History" />
+                            <ItemLink path="/procurement-history" name="Procurement History" />
                         </>
                         : <></>
                     }
@@ -65,6 +68,7 @@ export default function Sidebar(props) {
                     {currentSession.role === BasicConstant.ROLE_SUPPLIER ?
                         <>
                             <ItemLink path="/procurement-list" name="Procurement List" />
+                            <ItemLink path="/procurement-history" name="Procurement History" />
                         </>
                         : <></>
                     }
