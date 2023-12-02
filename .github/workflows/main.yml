@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: CI / CD
 
 on:
   push:
@@ -7,12 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  install:
     runs-on: ubuntu-latest
-
-    env:
-      REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
-      REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
 
     steps:
       - name: Checkout repository
@@ -26,10 +22,24 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: npm run build
+  build:
+    runs-on: ubuntu-latest
+    needs: install
 
-  deploy:
+    env:
+      REACT_APP_ENDPOINT: ${{ secrets.REACT_APP_ENDPOINT }}
+      REACT_APP_SECRET_KEY: ${{ secrets.REACT_APP_SECRET_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build project
+        run: |
+          npm install
+          npm run build
+
+  registry:
     runs-on: ubuntu-latest
     needs: build
 
@@ -52,3 +62,19 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/scm-fe:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: registry
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: SSH into the server and run the deploy script
+        run: ssh -o StrictHostKeyChecking=no bimaserver@103.175.218.148 "bash ~/deploy-scm-fe.sh"
