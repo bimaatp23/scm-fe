@@ -17,6 +17,9 @@ export default function ClientWrapper(props) {
         new_password: "",
         renew_password: ""
     })
+    const [staticOpen, setStaticOpen] = useState(true)
+    const [dinamicOpen, setDinamicOpen] = useState(true)
+    const minimize = staticOpen ? !staticOpen : dinamicOpen
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -58,10 +61,23 @@ export default function ClientWrapper(props) {
     }
 
     return <div>
-        <div className="fixed h-[100vh  ] w-[20vw] left-0">
-            <Sidebar openModalChangePassword={() => setIsModalChangePasswordOpen(true)} doLogout={doLogout} />
+        <div
+            className={"fixed h-[100vh] left-0 transition-all"}
+            style={{
+                width: (minimize ? "70px" : "300px")
+            }}
+        >
+            <Sidebar
+                openModalChangePassword={() => setIsModalChangePasswordOpen(true)}
+                doLogout={doLogout} minimize={minimize}
+                setStaticOpen={() => setStaticOpen(!staticOpen)}
+                setDinamicOpen={() => setDinamicOpen(false)}
+                setDinamicClose={() => setDinamicOpen(true)}
+            />
         </div>
-        <div className="bg-white fixed h-[100vh] w-[80vw] right-0 overflow-y-scroll">
+        <div className={"bg-gray-900 fixed h-[100vh] right-0 overflow-y-scroll transition-all"} style={{
+            width: `calc(100vw - ${minimize ? "70px" : "300px"})`
+        }}>
             <div className="relative">
                 <div className="p-8">
                     {children}
@@ -111,6 +127,6 @@ export default function ClientWrapper(props) {
                 Update
             </Button>
         </Modal>
-        <p className="fixed right-4 bottom-2">{moment(currentTime).format("YYYY-MM-DD HH:mm:ss")}</p>
+        <p className="fixed right-4 bottom-2 text-blue-600 font-semibold">{moment(currentTime).format("YYYY-MM-DD HH:mm:ss")}</p>
     </div>
 }

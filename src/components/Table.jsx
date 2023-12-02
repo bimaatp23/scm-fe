@@ -1,7 +1,7 @@
 export function Table(props) {
     const { children } = props
 
-    return <table className="border-2 border-slate-300">
+    return <table className="border-2 border-slate-300 bg-slate-50">
         {children}
     </table>
 }

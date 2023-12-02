@@ -21,7 +21,7 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: #eee; 
+  background: #111827; 
 }
  
 ::-webkit-scrollbar-thumb {
@@ -29,7 +29,7 @@ code {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #03527d; 
+  background: #075985; 
 }
 
 .modal-content::-webkit-scrollbar {

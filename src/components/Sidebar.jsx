@@ -1,3 +1,4 @@
+import { Dashboard, Factory, FormatListBulleted, Group, Inventory, LockReset, Logout, ShoppingCart, Warehouse } from "@mui/icons-material"
 import BasicConstant from "../BasicConstant"
 import { UseCaseFactory } from "../UseCaseFactory"
 
@@ -7,68 +8,68 @@ export default function Sidebar(props) {
     const currentSession = useCaseFactory.currentSession().get()
 
     return (
-        <div className="flex flex-col justify-between text-left bg-sky-700 h-screen fixed w-full top-0 bottom-0 left-0 col-span-1 text-white pt-6">
+        <div className="flex flex-col justify-between text-left bg-blue-700 h-screen fixed w-full top-0 bottom-0 left-0 col-span-1 text-white pt-6">
             <div>
                 <div className="mt-2 mb-6 pl-6">
-                    <h1 className="text-3xl font-bold">eSCM PT Rajawali</h1>
+                    <h1 className="text-3xl font-bold cursor-pointer" onClick={props.setStaticOpen}>{props.minimize ? <FormatListBulleted /> : "eSCM PT Rajawali"}</h1>
                 </div>
                 <ul>
-                    <ItemLink path="/" name="Dashboard" />
+                    <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/" name="Dashboard"><Dashboard /></ItemLink>
                     {currentSession.role === BasicConstant.ROLE_ADMIN ?
                         <>
-                            <ItemLink path="/user-list" name="User List" />
-                            <ItemLink path="/inventory-list" name="Inventory List" />
-                            <ItemLink path="/production-list" name="Production List" />
-                            <ItemLink path="/production-history" name="Production History" />
-                            <ItemLink path="/order-list" name="Order List" />
-                            <ItemLink path="/order-history" name="Order History" />
-                            <ItemLink path="/procurement-list" name="Procurement List" />
-                            <ItemLink path="/procurement-history" name="Procurement History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/user-list" name="User List"><Group /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/inventory-list" name="Inventory List"><Warehouse /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/production-list" name="Production List"><Factory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/production-history" name="Production History"><Factory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/order-list" name="Order List"><ShoppingCart /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/order-history" name="Order History"><ShoppingCart /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-list" name="Procurement List"><Inventory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-history" name="Procurement History"><Inventory /></ItemLink>
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_PENGADAAN ?
                         <>
-                            <ItemLink path="/procurement-list" name="Procurement List" />
-                            <ItemLink path="/procurement-history" name="Procurement History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-list" name="Procurement List"><Inventory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-history" name="Procurement History"><Inventory /></ItemLink>
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_GUDANG ?
                         <>
-                            <ItemLink path="/inventory-list" name="Inventory List" />
-                            <ItemLink path="/production-list" name="Production List" />
-                            <ItemLink path="/production-history" name="Production History" />
-                            <ItemLink path="/procurement-history" name="Procurement History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/inventory-list" name="Inventory List"><Warehouse /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/production-list" name="Production List"><Factory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/production-history" name="Production History"><Factory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-history" name="Procurement History"><Inventory /></ItemLink>
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_PRODUKSI ?
                         <>
-                            <ItemLink path="/production-list" name="Production List" />
-                            <ItemLink path="/production-history" name="Production History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/production-list" name="Production List"><Factory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/production-history" name="Production History"><Factory /></ItemLink>
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_DISTRIBUSI ?
                         <>
-                            <ItemLink path="/inventory-list" name="Inventory List" />
-                            <ItemLink path="/order-list" name="Order List" />
-                            <ItemLink path="/order-history" name="Order History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/inventory-list" name="Inventory List"><Warehouse /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/order-list" name="Order List"><ShoppingCart /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/order-history" name="Order History"><ShoppingCart /></ItemLink>
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_RETAIL ?
                         <>
-                            <ItemLink path="/order-list" name="My Order" />
-                            <ItemLink path="/order-history" name="My Order History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/order-list" name="My Order"><ShoppingCart /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/order-history" name="My Order History"><ShoppingCart /></ItemLink>
                         </>
                         : <></>
                     }
                     {currentSession.role === BasicConstant.ROLE_SUPPLIER ?
                         <>
-                            <ItemLink path="/procurement-list" name="Procurement List" />
-                            <ItemLink path="/procurement-history" name="Procurement History" />
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-list" name="Procurement List"><Inventory /></ItemLink>
+                            <ItemLink setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} path="/procurement-history" name="Procurement History"><Inventory /></ItemLink>
                         </>
                         : <></>
                     }
@@ -76,8 +77,8 @@ export default function Sidebar(props) {
             </div>
             <div>
                 <ul>
-                    <ItemFunction onClick={openModalChangePassword} name="Change Password" />
-                    <ItemFunction onClick={doLogout} name="Log out" />
+                    <ItemFunction setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} onClick={openModalChangePassword} name="Change Password"><LockReset /></ItemFunction>
+                    <ItemFunction setDinamicOpen={props.setDinamicOpen} setDinamicClose={props.setDinamicClose} minimize={props.minimize} onClick={doLogout} name="Log out"><Logout /></ItemFunction>
                 </ul>
             </div>
         </div>
@@ -85,13 +86,27 @@ export default function Sidebar(props) {
 }
 
 function ItemLink(props) {
-    const { path, name } = props
+    const { setDinamicOpen, setDinamicClose, minimize, path, name, children } = props
 
-    return <li onClick={() => window.location.assign(path)} className="text-xl font-semibold hover:bg-sky-900 pl-6 py-2 cursor-pointer">{name}</li>
+    return <li
+        onClick={() => window.location.assign(path)}
+        className="text-xl font-semibold hover:bg-gray-900 hover:text-blue-600 pl-6 py-2 cursor-pointer"
+        onMouseOver={setDinamicOpen}
+        onMouseLeave={setDinamicClose}
+    >
+        {minimize ? children : name}
+    </li>
 }
 
 function ItemFunction(props) {
-    const { onClick, name } = props
+    const { setDinamicOpen, setDinamicClose, minimize, onClick, name, children } = props
 
-    return <li onClick={onClick} className="text-xl font-semibold hover:bg-sky-900 pl-6 py-2 cursor-pointer">{name}</li>
+    return <li
+        onClick={onClick}
+        className="text-xl font-semibold hover:bg-gray-900 hover:text-blue-600 pl-6 py-2 cursor-pointer"
+        onMouseOver={setDinamicOpen}
+        onMouseLeave={setDinamicClose}
+    >
+        {minimize ? children : name}
+    </li>
 }
