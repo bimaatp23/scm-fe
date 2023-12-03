@@ -19,7 +19,7 @@ export default function ClientWrapper(props) {
     })
     const [staticOpen, setStaticOpen] = useState(true)
     const [dinamicOpen, setDinamicOpen] = useState(true)
-    const minimize = staticOpen ? staticOpen : dinamicOpen
+    const minimize = staticOpen ? dinamicOpen : staticOpen
 
     useEffect(() => {
         const interval = setInterval(() => {

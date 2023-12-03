@@ -16,7 +16,7 @@ export default function Button(props) {
     } else if (color === "green") {
         classColor = "bg-green-600 hover:bg-green-500"
     } else if (color === "blue") {
-        classColor = "bg-sky-600 hover:bg-sky-500"
+        classColor = "bg-blue-600 hover:bg-blue-500"
     } else if (color === "yellow") {
         classColor = "bg-amber-400 hover:bg-amber-300"
     } else if (color === "gray") {

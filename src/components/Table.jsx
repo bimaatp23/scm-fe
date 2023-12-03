@@ -29,7 +29,7 @@ export function TableRow(props) {
 export function TableCell(props) {
     const { children, colSpan, className } = props
 
-    return <td colSpan={colSpan ?? 1} className={`border-2 py-2 px-2 border-slate-300 ${className}`}>
+    return <td colSpan={colSpan ?? 1} className={`border-2 py-2 px-2 max-w-xl border-slate-300 ${className}`}>
         {children}
     </td>
 }

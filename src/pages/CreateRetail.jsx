@@ -47,7 +47,7 @@ export default function CreateRetail() {
   }
 
   return (
-    <div className="h-screen flex justify-center items-center bg-sky-700">
+    <div className="h-screen flex justify-center items-center bg-gray-900">
       <div className="bg-white shadow-md rounded-md w-96 p-4">
         <h1 className="text-2xl font-bold mb-2">Create Retail</h1>
         <div className="mb-4">
